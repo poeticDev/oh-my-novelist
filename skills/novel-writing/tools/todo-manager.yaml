@@ -1,0 +1,266 @@
+name: todo-manager
+type: tool
+version: 1.0.0
+description: 웹소설 창작 과정의 Todo 관리 도구
+
+# Todo 관리 기능
+functions:
+  create_project_todos:
+    description: 새 작품의 전체 Todo 목록 생성
+    parameters:
+      project_name:
+        type: string
+        required: true
+      template:
+        type: string
+        enum: [default, fantasy, romance, thriller]
+        default: default
+    returns:
+      - todo_list
+      - project_path
+
+  get_current_todos:
+    description: 현재 작품의 Todo 목록 조회
+    parameters:
+      project_name:
+        type: string
+        required: true
+    returns:
+      - todos
+      - progress_percentage
+      - current_phase
+
+  update_todo_status:
+    description: 특정 Todo 상태 업데이트
+    parameters:
+      project_name:
+        type: string
+        required: true
+      todo_id:
+        type: string
+        required: true
+      status:
+        type: string
+        enum: [pending, in_progress, completed, cancelled]
+        required: true
+      notes:
+        type: string
+        required: false
+
+  add_custom_todo:
+    description: 사용자 정의 Todo 추가
+    parameters:
+      project_name:
+        type: string
+        required: true
+      content:
+        type: string
+        required: true
+      phase:
+        type: string
+        enum: [planning, worldbuilding, character, plotting, writing, editing, publishing]
+        required: true
+      priority:
+        type: string
+        enum: [low, medium, high, critical]
+        default: medium
+
+  get_progress_report:
+    description: 진행 상황 리포트 생성
+    parameters:
+      project_name:
+        type: string
+        required: true
+    returns:
+      - overall_progress
+      - phase_progress
+      - completed_tasks
+      - remaining_tasks
+      - estimated_completion
+
+  archive_completed_todos:
+    description: 완료된 Todo 아카이브
+    parameters:
+      project_name:
+        type: string
+        required: true
+
+# 기본 Todo 템플릿
+templates:
+  default:
+    phases:
+      - name: planning
+        title: 기획 단계
+        todos:
+          - id: P001
+            content: 장르 및 타겟 독자층 정의
+            priority: critical
+          - id: P002
+            content: 로그라인 작성
+            priority: critical
+          - id: P003
+            content: 핵심 컨셉 확정
+            priority: high
+          - id: P004
+            content: 작품 톤앤매너 설정
+            priority: medium
+
+      - name: worldbuilding
+        title: 세계관 설계
+        todos:
+          - id: W001
+            content: 시대/공간 설정
+            priority: critical
+          - id: W002
+            content: 마법/능력 시스템 정의
+            priority: high
+          - id: W003
+            content: 사회 구조 설계
+            priority: medium
+          - id: W004
+            content: 역사/신화 작성
+            priority: medium
+          - id: W005
+            content: 세계관 일관성 검증
+            priority: high
+
+      - name: character
+        title: 캐릭터 설계
+        todos:
+          - id: C001
+            content: 주인공 프로필 작성
+            priority: critical
+          - id: C002
+            content: 조연 캐릭터 설계
+            priority: high
+          - id: C003
+            content: 악역/적대자 설정
+            priority: high
+          - id: C004
+            content: 캐릭터 관계도 구축
+            priority: medium
+          - id: C005
+            content: 성장 아크 설계
+            priority: high
+
+      - name: plotting
+        title: 플롯 구조
+        todos:
+          - id: PL001
+            content: 3막 구조 설계
+            priority: critical
+          - id: PL002
+            content: 주요 전환점 정의
+            priority: critical
+          - id: PL003
+            content: 챕터별 개요 작성
+            priority: high
+          - id: PL004
+            content: 훅 배치 계획
+            priority: high
+          - id: PL005
+            content: 서브플롯 구성
+            priority: medium
+
+      - name: writing
+        title: 집필 단계
+        todos:
+          - id: WR001
+            content: 1화 집필
+            priority: critical
+          - id: WR002
+            content: 2-5화 집필
+            priority: high
+          - id: WR003
+            content: 6-10화 집필
+            priority: high
+          - id: WR004
+            content: 중반부 집필 (11-20화)
+            priority: medium
+          - id: WR005
+            content: 후반부 집필 (21-30화)
+            priority: medium
+          - id: WR006
+            content: 결말 집필 (31-40화)
+            priority: high
+
+      - name: editing
+        title: 수정/편집
+        todos:
+          - id: E001
+            content: 1차 자체 교정
+            priority: high
+          - id: E002
+            content: Critic 피드백 반영
+            priority: high
+          - id: E003
+            content: Editor 문장 다듬기
+            priority: medium
+          - id: E004
+            content: 일관성 검토
+            priority: high
+          - id: E005
+            content: 최종 교정
+            priority: critical
+
+  fantasy:
+    extends: default
+    phases:
+      worldbuilding:
+        additional_todos:
+          - id: W006
+            content: 종족 설정 (엘프, 드워프 등)
+            priority: medium
+          - id: W007
+            content: 창세 신화 작성
+            priority: low
+
+  romance:
+    extends: default
+    phases:
+      character:
+        additional_todos:
+          - id: C006
+            content: 로맨스 라인 설계
+            priority: critical
+          - id: C007
+            content: 케미스트리 포인트 정의
+            priority: high
+
+  thriller:
+    extends: default
+    phases:
+      plotting:
+        additional_todos:
+          - id: PL006
+            content: 미스터리 요소 설계
+            priority: critical
+          - id: PL007
+            content: 반전 포인트 계획
+            priority: critical
+
+# Todo 상태 정의
+status:
+  pending:
+    label: 대기중
+    color: gray
+  in_progress:
+    label: 진행중
+    color: blue
+  completed:
+    label: 완료
+    color: green
+  cancelled:
+    label: 취소
+    color: red
+
+# 자동화 규칙
+automation:
+  on_agent_complete:
+    action: suggest_next_todo
+  
+  on_phase_complete:
+    action: celebrate_and_show_next_phase
+  
+  on_all_complete:
+    action: generate_completion_report
