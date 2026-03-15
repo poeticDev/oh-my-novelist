@@ -1,0 +1,31 @@
+{
+  "name": "oh-my-novelist",
+  "version": "0.1.0",
+  "description": "Web novel creation plugin for OpenCode",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "novel",
+    "writing",
+    "web-novel"
+  ],
+  "author": "",
+  "license": "MIT",
+  "opencode": {
+    "type": "plugin",
+    "commands": [
+      {
+        "name": "novel-new",
+        "description": "Start a new novel project"
+      },
+      {
+        "name": "novel-continue",
+        "description": "Continue an existing novel"
+      }
+    ]
+  }
+}
