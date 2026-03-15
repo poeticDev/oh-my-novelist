@@ -192,6 +192,28 @@ ui:
   # 진행 상황 표시
   show_progress: true
 
+# 명령어 등록
+commands:
+  - name: novel-new
+    file: commands/novel-new.yaml
+    description: 새 웹소설 프로젝트 생성
+  
+  - name: novel-continue
+    file: commands/novel-continue.yaml
+    description: 기존 작품 이어서 작성
+  
+  - name: novel-export
+    file: commands/novel-export.yaml
+    description: 작품을 다양한 형식으로 낸내기
+  
+  - name: novel-todo
+    file: commands/novel-todo.yaml
+    description: Todo 관리 명령어
+  
+  - name: novel-stats
+    file: commands/novel-stats.yaml
+    description: 작품 통계 및 분석
+
 # 로깅
 logging:
   level: info

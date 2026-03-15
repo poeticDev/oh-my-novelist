@@ -1,0 +1,120 @@
+name: novel-stats
+description: 작품 통계 및 분석
+
+parameters:
+  project_name:
+    type: string
+    description: 작품명
+    required: true
+  
+  detail_level:
+    type: string
+    description: 상세 수준
+    enum: [summary, detailed, full]
+    default: summary
+    required: false
+
+workflow:
+  steps:
+    - name: collect_statistics
+      action: gather_stats
+      params:
+        project: "{{project_name}}"
+        detail: "{{detail_level}}"
+    
+    - name: calculate_metrics
+      action: compute_metrics
+      params:
+        chapters: "{{chapters}}"
+        words: "{{word_count}}"
+        characters: "{{character_count}}"
+    
+    - name: generate_report
+      action: format_report
+      params:
+        stats: "{{statistics}}"
+        detail: "{{detail_level}}"
+
+output:
+  summary: |
+    📊 {{project_name}} - 통계 요약
+    
+    📝 분량:
+       총 글자수: {{total_words}}자
+       총 회차: {{total_chapters}}화
+       평균 회차 글자수: {{avg_words_per_chapter}}자
+    
+    👤 캐릭터:
+       등장 인물: {{character_count}}명
+       주인공: {{protagonist_name}}
+    
+    📈 진행:
+       완료: {{completed_percentage}}%
+       예상 완료: {{estimated_completion}}
+  
+  detailed: |
+    📊 {{project_name}} - 상세 통계
+    
+    📝 분량 분석:
+       총 글자수: {{total_words}}자
+       총 회차: {{total_chapters}}화
+       평균 회차 글자수: {{avg_words_per_chapter}}자
+       
+       회차별 분포:
+       {{#each chapter_word_counts}}
+       {{number}}화: {{words}}자
+       {{/each}}
+    
+    👤 캐릭터 분석:
+       등장 인물: {{character_count}}명
+       - 주연: {{main_characters}}명
+       - 조연: {{supporting_characters}}명
+       - 단역: {{minor_characters}}명
+       
+       캐릭터별 등장 빈도:
+       {{#each character_appearances}}
+       {{name}}: {{count}}회
+       {{/each}}
+    
+    📈 진행 분석:
+       완료: {{completed_percentage}}%
+       현재 단계: {{current_phase}}
+       
+       단계별 진행:
+       {{#each phase_progress}}
+       {{name}}: {{progress}}%
+       {{/each}}
+       
+       예상 완료: {{estimated_completion}}
+       작업 속도: {{words_per_day}}자/일
+  
+  full: |
+    📊 {{project_name}} - 전체 분석 리포트
+    
+    [상세 통계 내용 + 추가 분석]
+    
+    🔍 텍스트 분석:
+       가장 많이 쓴 단어: {{top_words}}
+       문장 평균 길이: {{avg_sentence_length}}
+       대화 비율: {{dialogue_ratio}}%
+       묘사 비율: {{description_ratio}}%
+    
+    📊 쓰기 패턴:
+       활발한 시간대: {{active_hours}}
+       연속 집필 일수: {{consecutive_days}}
+       평균 작업 시간: {{avg_session_duration}}
+    
+    💡 제안사항:
+       {{#each suggestions}}
+       - {{this}}
+       {{/each}}
+
+examples:
+  - command: /novel-stats "마법사의 탑"
+    description: 기본 통계 보기
+  
+  - command: /novel-stats "마법사의 탑" --detail_level detailed
+    description: 상세 통계
+  
+  - command: /novel-stats "마법사의 탑" --detail_level full
+    description: 전체 분석 리포트

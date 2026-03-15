@@ -1,0 +1,107 @@
+name: novel-export
+description: 작품을 다양한 형식으로 낸내기
+
+parameters:
+  project_name:
+    type: string
+    description: 작품명
+    required: true
+  
+  format:
+    type: string
+    description: 낸내기 형식
+    enum: [markdown, epub, pdf, html, txt]
+    default: markdown
+    required: true
+  
+  output_path:
+    type: string
+    description: 저장 경로
+    default: "~/Documents/novels/exports"
+    required: false
+  
+  include_metadata:
+    type: boolean
+    description: 메타데이터 포함 여부
+    default: true
+    required: false
+  
+  chapters:
+    type: array
+    description: 낸내할 회차 범위 (비어있으면 전체)
+    items:
+      type: integer
+    required: false
+
+workflow:
+  steps:
+    - name: validate_project
+      action: validate_project_exists
+      params:
+        project_name: "{{project_name}}"
+    
+    - name: collect_chapters
+      action: gather_files
+      params:
+        project: "{{project_name}}"
+        pattern: "episodes/*.md"
+        filter: "{{chapters}}"
+    
+    - name: process_content
+      action: conditional
+      condition: "{{format != 'markdown'}}"
+      then:
+        - convert_format:
+            from: markdown
+            to: "{{format}}"
+            include_metadata: "{{include_metadata}}"
+      else:
+        - concatenate_files
+    
+    - name: save_export
+      action: write_file
+      params:
+        path: "{{output_path}}/{{project_name}}.{{format}}"
+        content: "{{processed_content}}"
+    
+    - name: update_obsidian
+      action: conditional
+      condition: "{{obsidian_enabled}}"
+      then:
+        - call_mcp:
+            mcp: obsidian-vault
+            method: write
+            params:
+              path: "exports/{{project_name}}.{{format}}"
+              content: "{{processed_content}}"
+
+output:
+  success_message: |
+    ✅ 낸내기 완료!
+    
+    📖 작품: {{project_name}}
+    📄 형식: {{format}}
+    📍 위치: {{output_path}}/{{project_name}}.{{format}}
+    📊 분량: {{word_count}}자 / {{chapter_count}}화
+    
+    {{#if obsidian_sync}}
+    🔄 Obsidian에도 동기화되었습니다.
+    {{/if}}
+  
+  formats_info: |
+    지원 형식:
+    - markdown: 기본 Markdown (.md)
+    - epub: 전자책 형식 (.epub)
+    - pdf: PDF 문서 (.pdf)
+    - html: 웹 페이지 (.html)
+    - txt: 텍스트 파일 (.txt)
+
+examples:
+  - command: /novel-export "마법사의 탑" --format epub
+    description: EPUB 형식으로 낸내기
+  
+  - command: /novel-export "마법사의 탑" --format pdf --chapters 1 2 3
+    description: 1-3화만 PDF로 낸내기
+  
+  - command: /novel-export "마법사의 탑" --format markdown --output_path ~/Desktop
+    description: Desktop에 Markdown 저장
