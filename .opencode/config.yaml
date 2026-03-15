@@ -1,0 +1,206 @@
+# Oh My Novelist - OpenCode Plugin Configuration
+# 웹소설 창작 플러그인 설정
+
+name: oh-my-novelist
+version: 1.0.0
+description: Web novel creation plugin with 9 specialized agents for collaborative writing
+author: poeticDev
+license: MIT
+
+# 플러그인 타입
+type: plugin
+
+# 카테고리 시스템 - 창작 단계별 모델/온도 설정
+categories:
+  # 기획 및 설계 단계 - 창의적 사고
+  novel-planning:
+    description: 기획 및 설계 단계 - 장르, 컨셉, 세계관, 캐릭터 설계
+    model: claude-opus-4-6
+    variant: max
+    temperature: 0.8
+    top_p: 0.9
+    prompt_append: |
+      당신은 창의적인 기획 전문가입니다. 
+      브레인스토밍과 아이디어 발산에 최적화되어 있습니다.
+      다양한 가능성을 제시하고 작가의 상상력을 자극하세요.
+    maxTokens: 4096
+    thinking:
+      type: enabled
+      budgetTokens: 16000
+    
+  # 집필 단계 - 생동감 있는 서술
+  novel-writing:
+    description: 실제 집필 단계 - 장면, 대화, 지문 작성
+    model: claude-sonnet-4-6
+    temperature: 0.7
+    top_p: 0.9
+    prompt_append: |
+      당신은 소설 작가입니다.
+      생동감 있는 문체와 흡입력 있는 서술로 독자를 사로잡으세요.
+      감각적 디테일과 감정 표현에 중점을 둡니다.
+    maxTokens: 8192
+    
+  # 편집 단계 - 정확하고 간결하게
+  novel-editing:
+    description: 교정 및 편집 단계 - 문장 다듬기, 오류 수정
+    model: claude-sonnet-4-6
+    temperature: 0.3
+    top_p: 0.85
+    prompt_append: |
+      당신은 편집자입니다.
+      정확한 문법, 간결한 문장, 일관된 문체를 유지하세요.
+      불필요한 수식어를 제거하고 핵심만 남깁니다.
+    maxTokens: 4096
+    
+  # 분석 및 피드백 단계
+  novel-analysis:
+    description: 분석 및 피드백 단계 - 플롯 검토, 일관성 확인
+    model: claude-opus-4-6
+    variant: max
+    temperature: 0.4
+    top_p: 0.85
+    prompt_append: |
+      당신은 작품 분석가입니다.
+      객관적이고 건설적인 관점에서 작품을 평가하세요.
+      문제점을 지적하고 구체적인 개선 방향을 제시합니다.
+    maxTokens: 4096
+    thinking:
+      type: enabled
+      budgetTokens: 12000
+
+# 에이전트 기본 설정
+agents:
+  default_category: novel-planning
+  default_language: ko
+  style: collaborative
+  
+  # 각 에이전트별 카테고리 매핑
+  agent_categories:
+    director: novel-planning
+    concept: novel-planning
+    world-builder: novel-planning
+    character: novel-planning
+    plot: novel-planning
+    scene: novel-writing
+    dialogue: novel-writing
+    critic: novel-analysis
+    editor: novel-editing
+
+# 트리거 설정
+triggers:
+  # 에이전트 호출 트리거
+  agents:
+    director: ["@novel", "@director", "/novel"]
+    concept: ["@concept", "@기횞자"]
+    world-builder: ["@world", "@world-builder", "@세계관"]
+    character: ["@character", "@캐릭터"]
+    plot: ["@plot", "@플롯"]
+    scene: ["@scene", "@장면"]
+    dialogue: ["@dialogue", "@대화"]
+    critic: ["@critic", "@review", "@피드백"]
+    editor: ["@editor", "@edit", "@편집"]
+  
+  # 키워드 기반 자동 라우팅
+  intent_routing:
+    planning:
+      keywords: ["기획", "아이디어", "컨셉", "장르", "로그라인"]
+      agent: concept
+      
+    worldbuilding:
+      keywords: ["세계관", "배경", "역사", "마법", "규칙"]
+      agent: world-builder
+      
+    character:
+      keywords: ["캐릭터", "인물", "주인공", "성격", "관계"]
+      agent: character
+      
+    plotting:
+      keywords: ["플롯", "구조", "전개", "훅", "클리맥스"]
+      agent: plot
+      
+    writing:
+      keywords: ["써줘", "작성", "장면", "대화", "지문"]
+      agent: scene
+      
+    reviewing:
+      keywords: ["봐줘", "검토", "어때", "피드백", "평가"]
+      agent: critic
+      
+    editing:
+      keywords: ["다듬어", "교정", "편집", "수정", "고쳐"]
+      agent: editor
+
+# 프로젝트 설정
+project:
+  # 기본 프로젝트 경로
+  default_path: "~/Documents/novels"
+  
+  # 템플릿 설정
+  templates:
+    default: "./templates/default"
+    fantasy: "./templates/fantasy"
+    romance: "./templates/romance"
+    thriller: "./templates/thriller"
+  
+  # 파일 구조
+  structure:
+    - concept/
+    - world/
+    - characters/
+    - plot/
+    - episodes/
+    - exports/
+
+# Obsidian 연동
+obsidian:
+  enabled: true
+  vault_path: null  # 사용자 설정 필요
+  sync_mode: auto
+  folder_prefix: "04_novel/works/"
+  
+  # 자동 동기화 설정
+  auto_sync:
+    on_save: true
+    interval: 300  # 5분
+    backup_before_sync: true
+
+# 저장 설정
+save:
+  auto_save: true
+  interval: 60  # 1분
+  backup_enabled: true
+  max_backups: 10
+  format: markdown
+
+# 언어 설정
+language:
+  primary: ko
+  output: ko
+  agent_prompts: ko
+
+# UI 설정
+ui:
+  # 작가 호칭
+  author_title: "작가님"
+  
+  # 대화 스타일
+  conversation_style: collaborative
+  
+  # 출력 형식
+  output_format: structured
+  
+  # 진행 상황 표시
+  show_progress: true
+
+# 로깅
+logging:
+  level: info
+  file: "~/.config/opencode/oh-my-novelist.log"
+  max_size: 10MB
+  max_files: 5
+
+# 개발 모드 (디버깅용)
+development:
+  debug: false
+  verbose: false
+  mock_obsidian: false
