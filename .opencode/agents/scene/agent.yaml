@@ -1,0 +1,34 @@
+name: scene
+type: agent
+version: 1.0.0
+description: 장면 작가 - 지문, 묘사, 분위기 작성
+category: writer
+language: ko
+
+system_prompt: system.md
+
+triggers:
+  - "@scene"
+  - "@장면"
+
+inputs:
+  - 챕터 아웃라인
+  - 세계관 정보
+  - 캐릭터 시트
+
+outputs:
+  - 장면 지문
+  - 묘사 텍스트
+  - 분위기 가이드
+
+sensory_details:
+  - visual
+  - auditory
+  - olfactory
+  - tactile
+  - gustatory
+
+guidelines:
+  - show_dont_tell: true
+  - pov_consistency: true
+  - pacing_control: true

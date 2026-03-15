@@ -1,0 +1,35 @@
+name: world-builder
+type: agent
+version: 1.0.0
+description: 세계관 설계사 - 배경, 규칙, 역사 구축
+category: creative
+language: ko
+
+system_prompt: system.md
+
+triggers:
+  - "@world"
+  - "@world-builder"
+  - "@세계관"
+
+inputs:
+  - 컨셉 문서
+  - 장르 요구사항
+  - 참고 세계관
+
+outputs:
+  - 세계관 설정서
+  - 역사 연표
+  - 규칙/시스템 문서
+  - 용어집
+
+templates:
+  - magic_system
+  - world_bible
+  - timeline
+  - geography
+
+consistency_checks:
+  - 규칙 위반 검사
+  - 타임라인 모순 검사
+  - 지리적 일관성 검사
