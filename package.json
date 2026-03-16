@@ -2,8 +2,11 @@
   "name": "oh-my-novelist",
   "version": "0.1.0",
   "description": "Web novel creation plugin for OpenCode",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -16,16 +19,27 @@
   "author": "",
   "license": "MIT",
   "opencode": {
-    "type": "plugin",
-    "commands": [
-      {
-        "name": "novel-new",
-        "description": "Start a new novel project"
-      },
-      {
-        "name": "novel-continue",
-        "description": "Continue an existing novel"
-      }
-    ]
-  }
+    "type": "plugin"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "file:/Users/poeticdev/.config/opencode/node_modules/@opencode-ai/plugin",
+    "@opencode-ai/sdk": "file:/Users/poeticdev/.config/opencode/node_modules/@opencode-ai/sdk",
+    "zod": "^4.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "typescript": "^5.8.2"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poeticDev/oh-my-novelist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/poeticDev/oh-my-novelist/issues"
+  },
+  "homepage": "https://github.com/poeticDev/oh-my-novelist#readme"
 }
