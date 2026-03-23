@@ -9,19 +9,42 @@ Oh My Novelist는 OpenCode 환경에서 작동하는 웹소설 창작 지원 플
 
 ## 현재 구현된 기능
 
-- ✅ **9개 전문 에이전트**: Director(오케스트레이션), Concept(기획), World Builder(세계관), Character(캐릭터), Plot(플롯), Scene(장면), Dialogue(대화), Critic(검토), Editor(편집)
-- ✅ **에이전트 프롬프트**: 상세(3개) + 중간(3개) + 간단(3개) 하이브리드 방식
-- ✅ **프로젝트 상태 지속**: JSON 파일로 상태 저장 (.oh-my-novelist/state.json)
-- ✅ **Todo 지속성**: 디스크에 Todo 저장 (.oh-my-novelist/todos/)
-- ✅ **Director 중심 라우팅**: 모든 대화는 Director가 받아 적절한 에이전트로 분배
-- ✅ **@멘션 지원**: @concept, @world, @character 등 직접 에이전트 호출
+### 핵심 구현 완료
+- ✅ **9개 전문 에이전트 구조**: Director, Concept, World Builder, Character, Plot, Scene, Dialogue, Critic, Editor
+- ✅ **Director 중심 라우팅**: 모든 대화가 Director를 통해 처리되고 적절한 에이전트로 분배
+- ✅ **@멘션 지원**: @concept, @world, @character, @plot, @scene, @dialogue, @critic, @editor로 직접 에이전트 호출
+- ✅ **프로젝트 상태 지속**: JSON 파일로 상태 저장 (`.oh-my-novelist/state.json`)
+  - 현재 프로젝트 추적
+  - 프로젝트별 메타데이터 (단계, 마지막 접근 시간)
+- ✅ **Todo 지속성**: 디스크 기반 Todo 관리 (`.oh-my-novelist/todos/{프로젝트명}.json`)
+  - 8개 기본 Todo 자동 생성 (planning → writing)
+  - 상태 관리: pending, in_progress, completed, cancelled
+  - 단계별 진행률 계산
+  - 멱등한 생성 (force 옵션으로 재생성 가능)
+- ✅ ** novelist_todo 도구 등록**: OpenCode 도구로 Todo 관리 기능 노출
+  - `create`, `list`, `update`, `progress` 액션 지원
+- ✅ **Director 상태 인식**: 현재 프로젝트, 진행 상황, 다음 작업 제안
+
+### 부분 구현 / 실험적 기능
+- ⚠️ **에이전트 프롬프트**: 파일 구조는 있으나 실제 LLM 연동 없음 (정적 응답)
+- ⚠️ **상태 진행 추적**: Todo 기반으로 작동하나 자동 단계 전환은 없음
 
 ## 계획된 기능 (Phase 2)
 
-- 📝 **템플릿 시스템**: 캐릭터, 사건, 회차 템플릿
-- 📝 **Obsidian 연동**: 양방향 동기화
-- 📝 **슬래시 명령어**: /novel-new, /novel-todo 등
-- 📝 **AI 통합**: 실제 LLM 호출 연동
+- 📝 **템플릿 시스템**: 캐릭터 시트, 사건 구조, 회차 템플릿 파일 생성
+- 📝 **Obsidian 연동**: 볼트 자동 동기화 (현재는 JSON 파일만 생성)
+- 📝 **슬래시 명령어**: /novel-new, /novel-continue, /novel-todo 등 명시적 명령
+- 📝 **AI 통합**: 실제 LLM API 호출 연동 (현재는 정적 프롬프트 반환)
+- 📝 **자동 단계 전환**: Todo 완료 시 다음 단계 자동 제안
+
+## 현재 제한 사항
+
+1. **에이전트는 정적 응답**: 실제 AI/LLM 호출 없이 프롬프트 파일 내용만 반환
+2. **수동 상태 관리**: Todo 상태 업데이트는 수동으로 수행해야 함
+3. **템플릿 미지원**: 템플릿 생성 및 적용 기능 미구현
+4. **Obsidian 제한**: JSON 파일만 생성되며, 실시간 양방향 동기화 없음
+5. **슬래시 명령어 없음**: / 접두사 명령어는 구현되지 않음 (일반 대화 사용)
+6. **프로젝트 생성 수동**: 자동 초기화 없이 Todo 도구로 직접 생성 필요
 
 ## 설치 방법
 
