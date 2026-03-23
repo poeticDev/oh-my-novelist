@@ -392,11 +392,46 @@ Obsidian Vault/
 - **대안**: 자연어 대화 또는 `@멘션`으로 대체
 - **Phase 2**: 해결 방안 검토 후 재논의
 
-### 10.2 아직 미정인 사항 ❓
+### 10.2 확정된 사항 추가 ✅
 
-- [ ] **프롬프트 품질**: 간단한 템플릿 vs 상세한 시스템 프롬프트
-- [ ] **파일 I/O 우선순위**: MVP에 포함 vs Phase 2로 이관
-- [ ] **Todo 자동화**: 에이전트가 자동 업데이트 vs 수동 관리
+#### F. 프롬프트 품질 (Prompt Quality) - **하이브리드 방식**
+
+**Phase 1 (MVP) 프롬프트 전략**:
+
+| 에이전트 | 품질 수준 | 예상 분량 | 우선순위 |
+|---------|----------|----------|---------|
+| **Director** | 상세 | 300~500줄 | 🔴 높음 |
+| **Concept** | 상세 | 200~300줄 | 🔴 높음 |
+| **Character** | 상세 | 200~300줄 | 🔴 높음 |
+| **World Builder** | 중간 | 100~150줄 | 🟡 중간 |
+| **Plot** | 중간 | 100~150줄 | 🟡 중간 |
+| **Scene** | 간단 | 50~80줄 | 🟢 낮음 |
+| **Dialogue** | 간단 | 50~80줄 | 🟢 낮음 |
+| **Critic** | 중간 | 100~150줄 | 🟡 중간 |
+| **Editor** | 간단 | 50~80줄 | 🟢 낮음 |
+
+**상세 프롬프트 포함 내용**:
+- Identity (전문가 역할 정의)
+- Core Responsibility (핵심 책임)
+- Process (작업 프로세스)
+- Output Format (출력 형식)
+- Constraints (제약 조건)
+- Examples (좋은/나쁜 예시)
+- Tone & Style (말투와 스타일)
+- Failure Cases (핸드오프 조건)
+
+**간단한 템플릿 포함 내용**:
+- 역할과 기본 지침
+- 출력 형식
+- 2~3가지 핵심 제약
+
+#### G. 파일 I/O 우선순위
+- **MVP**: 메모리 기반 (Obsidian 파일 저장은 Phase 2)
+- **Phase 2**: 실제 파일 I/O 구현
+
+#### H. Todo 자동화
+- **MVP**: 수동 관리 (에이전트가 제안, 사용자가 직접 체크)
+- **Phase 2**: 선택적 자동 업데이트
 
 ---
 
@@ -409,6 +444,10 @@ Obsidian Vault/
    - `03_templates/01_character_template.md`
    - `03_templates/02_event_template.md`
    - `03_templates/03_episode_template.md`
+4. **프롬프트 파일 작성** (하이브리드 방식):
+   - 상세: `src/agents/prompts/director.md`, `concept.md`, `character.md`
+   - 중간: `world-builder.md`, `plot.md`, `critic.md`
+   - 간단: `scene.md`, `dialogue.md`, `editor.md`
 
 ### 단기 실행 (다음 세션)
 1. **폴 구조 리팩토링**: 기존 코드를 확정된 구조로 변경
