@@ -1,6 +1,7 @@
 import type { Plugin, PluginInput, Hooks } from "@opencode-ai/plugin";
 import type { Part, TextPart } from "@opencode-ai/sdk";
-import { loadState, saveState, setCurrentProject } from "./utils/state.js";
+import { loadState, saveState, setCurrentProject, getProjectState } from "./utils/state.js";
+import type { ProjectState } from "./utils/state.js";
 
 import { DirectorAgent } from "./agents/director.js";
 import { ConceptAgent } from "./agents/concept.js";
@@ -19,6 +20,15 @@ function getTextFromParts(parts: Part[]): string {
     .filter((part): part is TextPart => part.type === "text")
     .map(part => part.text)
     .join("");
+}
+
+function resolveActiveProject(state: { currentProject: string | null }): string | null {
+  return state.currentProject;
+}
+
+function getProjectStateOrNull(directory: string, projectName: string | null): ProjectState | null {
+  if (!projectName) return null;
+  return getProjectState(directory, projectName);
 }
 
 const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
@@ -42,17 +52,84 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   const todoManager = new TodoManagerTool(directory);
   
   return {
-    tool: {},
-    
+    tool: {
+      novelist_todo: {
+        description: "Manage novel project todos - create, list, update, and track progress",
+        parameters: {
+          type: "object",
+          properties: {
+            action: {
+              type: "string",
+              enum: ["create", "list", "update", "progress"],
+              description: "Action to perform on todos",
+            },
+            projectName: {
+              type: "string",
+              description: "Project name (optional, uses current project if not provided)",
+            },
+            todoId: {
+              type: "string",
+              description: "Todo ID (required for update action)",
+            },
+            status: {
+              type: "string",
+              enum: ["pending", "in_progress", "completed", "cancelled"],
+              description: "New status (required for update action)",
+            },
+            force: {
+              type: "boolean",
+              description: "Force recreate todos even if they exist (for create action)",
+            },
+          },
+          required: ["action"],
+        },
+        execute: async (args: {
+          action: string;
+          projectName?: string;
+          todoId?: string;
+          status?: string;
+          force?: boolean;
+        }) => {
+          const project = args.projectName || currentProject;
+          if (!project) {
+            return {
+              success: false,
+              error: "No project specified. Either provide projectName or set a current project first.",
+            };
+          }
+
+          switch (args.action) {
+            case "create":
+              return todoManager.createTodos(project, args.force);
+            case "list":
+              return todoManager.listTodos(project);
+            case "update":
+              return todoManager.updateTodo(project, args.todoId, args.status);
+            case "progress":
+              return todoManager.getProgress(project);
+            default:
+              return {
+                success: false,
+                error: `Unknown action: ${args.action}`,
+              };
+          }
+        },
+      },
+    },
+
     "chat.message": async (input, output) => {
       const message = output.message;
       const content = getTextFromParts(output.parts);
       
+      const activeProject = resolveActiveProject(state);
+      const projectState = getProjectStateOrNull(directory, activeProject);
+      
       const response = await agents.director.handle(
         content, 
-        currentProject, 
+        activeProject, 
         agents,
-        todoManager
+        todoManager,
+        projectState
       );
 
       output.parts.push({
