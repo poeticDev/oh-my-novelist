@@ -1,6 +1,6 @@
-import { BaseAgent } from "./base.js";
+import type { BaseAgent } from "./base.js";
 
-export class PlotAgent extends BaseAgent {
+export class PlotAgent implements BaseAgent {
   readonly name = "Plot Architect";
   readonly description = "플롯 설계사";
 

@@ -1,4 +1,4 @@
-export { BaseAgent } from "./base.js";
+export type { BaseAgent } from "./base.js";
 export { DirectorAgent } from "./director.js";
 export { ConceptAgent } from "./concept.js";
 export { WorldBuilderAgent } from "./world-builder.js";

@@ -1,6 +1,6 @@
-import { BaseAgent } from "./base.js";
+import type { BaseAgent } from "./base.js";
 
-export class CriticAgent extends BaseAgent {
+export class CriticAgent implements BaseAgent {
   readonly name = "Critic";
   readonly description = "리뷰어";
 

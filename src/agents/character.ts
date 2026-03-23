@@ -1,6 +1,6 @@
-import { BaseAgent } from "./base.js";
+import type { BaseAgent } from "./base.js";
 
-export class CharacterAgent extends BaseAgent {
+export class CharacterAgent implements BaseAgent {
   readonly name = "Character Designer";
   readonly description = "캐릭터 디자이너";
 

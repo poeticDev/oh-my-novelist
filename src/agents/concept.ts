@@ -1,6 +1,6 @@
-import { BaseAgent } from "./base.js";
+import type { BaseAgent } from "./base.js";
 
-export class ConceptAgent extends BaseAgent {
+export class ConceptAgent implements BaseAgent {
   readonly name = "Concept Agent";
   readonly description = "기획자 - 장르, 컨셉, 로그라인 개발";
 
