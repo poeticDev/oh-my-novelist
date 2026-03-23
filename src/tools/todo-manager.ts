@@ -1,6 +1,5 @@
-import type { PluginInput } from "@opencode-ai/plugin";
-
-type BunShell = PluginInput["$"];
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { join, dirname } from "path";
 
 interface TodoItem {
   id: string;
@@ -10,37 +9,47 @@ interface TodoItem {
   phase: string;
 }
 
-interface TodoActionArgs {
-  action: "create" | "list" | "update" | "progress";
-  projectName: string;
-  todoId?: string;
-  status?: "pending" | "in_progress" | "completed" | "cancelled";
+interface TodoData {
+  todos: TodoItem[];
+  updatedAt: string;
 }
 
+const TODOS_DIR = ".oh-my-novelist/todos";
+
 export class TodoManagerTool {
-  private $: BunShell;
-  private todos: Map<string, TodoItem[]> = new Map();
+  private baseDir: string;
 
-  constructor($: BunShell) {
-    this.$ = $;
+  constructor(baseDir: string) {
+    this.baseDir = baseDir;
   }
 
-  execute(args: TodoActionArgs) {
-    switch (args.action) {
-      case "create":
-        return this.createTodos(args.projectName);
-      case "list":
-        return this.listTodos(args.projectName);
-      case "update":
-        return this.updateTodo(args.projectName, args.todoId, args.status);
-      case "progress":
-        return this.getProgress(args.projectName);
-      default:
-        return { error: "Unknown action" };
+  private getTodoPath(projectName: string): string {
+    return join(this.baseDir, TODOS_DIR, `${projectName}.json`);
+  }
+
+  private loadTodos(projectName: string): TodoItem[] {
+    const todoPath = this.getTodoPath(projectName);
+    if (!existsSync(todoPath)) {
+      return [];
     }
+    const data = JSON.parse(readFileSync(todoPath, "utf-8")) as TodoData;
+    return data.todos;
   }
 
-  private createTodos(projectName: string) {
+  private saveTodos(projectName: string, todos: TodoItem[]): void {
+    const todoPath = this.getTodoPath(projectName);
+    const todoDir = dirname(todoPath);
+    if (!existsSync(todoDir)) {
+      mkdirSync(todoDir, { recursive: true });
+    }
+    const data: TodoData = {
+      todos,
+      updatedAt: new Date().toISOString()
+    };
+    writeFileSync(todoPath, JSON.stringify(data, null, 2), "utf-8");
+  }
+
+  createTodos(projectName: string) {
     const defaultTodos: TodoItem[] = [
       { id: "P001", content: "장르 및 타겟 독자층 정의", status: "pending", priority: "critical", phase: "planning" },
       { id: "P002", content: "로그라인 작성", status: "pending", priority: "critical", phase: "planning" },
@@ -52,32 +61,33 @@ export class TodoManagerTool {
       { id: "WR001", content: "1화 집필", status: "pending", priority: "critical", phase: "writing" },
     ];
     
-    this.todos.set(projectName, defaultTodos);
+    this.saveTodos(projectName, defaultTodos);
     return { success: true, todos: defaultTodos };
   }
 
-  private listTodos(projectName: string) {
-    const todos = this.todos.get(projectName) || [];
+  listTodos(projectName: string) {
+    const todos = this.loadTodos(projectName);
     return { success: true, todos };
   }
 
-  private updateTodo(projectName: string, todoId?: string, status?: string) {
-    const todos = this.todos.get(projectName);
-    if (!todos || !todoId || !status) {
+  updateTodo(projectName: string, todoId?: string, status?: string) {
+    const todos = this.loadTodos(projectName);
+    if (!todoId || !status) {
       return { error: "Invalid parameters" };
     }
     
     const todo = todos.find((t) => t.id === todoId);
     if (todo) {
       todo.status = status as TodoItem["status"];
+      this.saveTodos(projectName, todos);
       return { success: true, todo };
     }
     
     return { error: "Todo not found" };
   }
 
-  private getProgress(projectName: string) {
-    const todos = this.todos.get(projectName) || [];
+  getProgress(projectName: string) {
+    const todos = this.loadTodos(projectName);
     const completed = todos.filter((t) => t.status === "completed").length;
     const total = todos.length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
