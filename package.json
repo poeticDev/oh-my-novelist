@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -22,8 +23,6 @@
     "type": "plugin"
   },
   "dependencies": {
-    "@opencode-ai/plugin": "file:/Users/poeticdev/.config/opencode/node_modules/@opencode-ai/plugin",
-    "@opencode-ai/sdk": "file:/Users/poeticdev/.config/opencode/node_modules/@opencode-ai/sdk",
     "zod": "^4.1.8"
   },
   "devDependencies": {
