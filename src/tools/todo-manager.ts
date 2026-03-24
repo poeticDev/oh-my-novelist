@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
+import { updateProjectPhaseFromTodos } from "../utils/state.js";
 
 interface TodoItem {
   id: string;
@@ -193,6 +194,7 @@ export class TodoManagerTool {
 
     todo.status = status as TodoItem["status"];
     this.saveTodos(projectName, todos);
+    updateProjectPhaseFromTodos(this.baseDir, projectName, todos);
 
     return {
       success: true,
