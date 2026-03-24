@@ -68,3 +68,39 @@ export function setCurrentProject(baseDir: string, projectName: string | null): 
   }
   saveState(baseDir, state);
 }
+
+export function updateProjectPhaseFromTodos(
+  baseDir: string,
+  projectName: string,
+  todos: Array<{ phase: string; status: string }>
+): void {
+  const state = loadState(baseDir);
+  const project = state.projects[projectName];
+  if (!project) return;
+
+  const phaseOrder = ["planning", "worldbuilding", "character", "plotting", "writing", "editing"];
+  const phaseCompletion: Record<string, { completed: number; total: number }> = {};
+
+  for (const todo of todos) {
+    if (!phaseCompletion[todo.phase]) {
+      phaseCompletion[todo.phase] = { completed: 0, total: 0 };
+    }
+    phaseCompletion[todo.phase].total++;
+    if (todo.status === "completed") {
+      phaseCompletion[todo.phase].completed++;
+    }
+  }
+
+  let currentPhase = project.currentPhase;
+  for (const phase of phaseOrder) {
+    const stats = phaseCompletion[phase];
+    if (!stats || stats.completed < stats.total) {
+      currentPhase = phase;
+      break;
+    }
+  }
+
+  project.currentPhase = currentPhase;
+  project.lastAccessed = new Date().toISOString();
+  saveState(baseDir, state);
+}
