@@ -1,6 +1,6 @@
 import type { Plugin, PluginInput, Hooks } from "@opencode-ai/plugin";
 import type { Part, TextPart } from "@opencode-ai/sdk";
-import { loadState, saveState, setCurrentProject, getProjectState } from "./utils/state.js";
+import { loadState, saveState, setCurrentProject, getProjectState, updateProjectPhaseFromTodos } from "./utils/state.js";
 import type { ProjectState } from "./utils/state.js";
 
 import { DirectorAgent } from "./agents/director.js";
@@ -53,6 +53,59 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   
   return {
     tool: {
+      novelist_init_project: {
+        description: "Initialize a new novel project with todos and state",
+        parameters: {
+          type: "object",
+          properties: {
+            projectName: {
+              type: "string",
+              description: "Name of the project to create",
+            },
+          },
+          required: ["projectName"],
+        },
+        execute: async (args: { projectName: string }) => {
+          const projectName = args.projectName.trim();
+          if (!projectName) {
+            return {
+              success: false,
+              error: "Project name cannot be empty",
+            };
+          }
+
+          const existingProject = getProjectState(directory, projectName);
+          if (existingProject) {
+            setCurrentProject(directory, projectName);
+            const todos = todoManager.listTodos(projectName);
+            return {
+              success: true,
+              message: `Project "${projectName}" already exists. Switched to it.`,
+              projectName,
+              todos: todos.todos || [],
+              currentPhase: existingProject.currentPhase,
+            };
+          }
+
+          setCurrentProject(directory, projectName);
+          const todoResult = todoManager.createTodos(projectName, false);
+
+          if (!todoResult.success) {
+            return {
+              success: false,
+              error: `Failed to create todos: ${todoResult.error}`,
+            };
+          }
+
+          return {
+            success: true,
+            message: `Project "${projectName}" initialized successfully`,
+            projectName,
+            todos: todoResult.todos || [],
+            currentPhase: "planning",
+          };
+        },
+      },
       novelist_todo: {
         description: "Manage novel project todos - create, list, update, and track progress",
         parameters: {
