@@ -1,0 +1,3 @@
+- 2026-03-27 F1 audit decision: final verdict is REJECT until plan/task metadata and implementation match on prompt pipeline and ContextManager persistence requirements
+- 2026-03-27 F4 scope fidelity decision: treat `src/llm/chains.ts` as model fallback configuration (Anthropic-only candidate list), not a prohibited Director chain engine.
+- 2026-03-27 F4 scope fidelity decision: treat `.oh-my-novelist/context/conversations.json` as allowed MVP memory persistence; no canon/session-summary/agent-memory persistence files were introduced.

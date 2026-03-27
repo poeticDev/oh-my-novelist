@@ -1,0 +1,29 @@
+
+> oh-my-novelist@0.1.0 typecheck
+> tsc --noEmit
+
+
+=== BUILD ===
+
+> oh-my-novelist@0.1.0 build
+> tsc && npm run copy-prompts
+
+
+> oh-my-novelist@0.1.0 copy-prompts
+> mkdir -p dist/agents/prompts && cp src/agents/prompts/*.md dist/agents/prompts/
+
+
+=== TESTS ===
+
+> oh-my-novelist@0.1.0 test
+> vitest
+
+
+ RUN  v4.1.2 /Users/poeticdev/Documents/workspace/oh-my-novelist
+
+
+ Test Files  6 passed (6)
+      Tests  79 passed (79)
+   Start at  15:44:37
+   Duration  188ms (transform 365ms, setup 0ms, import 451ms, tests 35ms, environment 0ms)
+

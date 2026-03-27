@@ -1,0 +1,13 @@
+
+> oh-my-novelist@0.1.0 test
+> vitest tests/agents/director.smoke.test.ts
+
+
+ RUN  v4.1.2 /Users/poeticdev/Documents/workspace/oh-my-novelist
+
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  15:44:42
+   Duration  87ms (transform 19ms, setup 0ms, import 26ms, tests 3ms, environment 0ms)
+

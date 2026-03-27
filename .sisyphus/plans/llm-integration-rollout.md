@@ -126,9 +126,9 @@ Wave 5: Task 10 (stabilization and release readiness)
   - Test: `docs/LLM_INTEGRATION_PLAN_FINAL.md` — existing LLM contracts and degradation expectations to convert into tests
 
   **Acceptance Criteria**:
-  - [ ] `package.json` exposes a real `test` script that exits 0 once tests pass.
-  - [ ] The repo contains failing-first unit tests for resolver, prompt loader/builder, context isolation, and offline fallback behavior.
-  - [ ] `npm test` can run without requiring real API credentials.
+  - [x] `package.json` exposes a real `test` script that exits 0 once tests pass.
+  - [x] The repo contains failing-first unit tests for resolver, prompt loader/builder, context isolation, and offline fallback behavior.
+  - [x] `npm test` can run without requiring real API credentials.
 
   **QA Scenarios**:
   ```
@@ -147,7 +147,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `test(llm): add harness and baseline specs` | Files: `package.json`, test files, optional test config
 
-- [ ] 2. Introduce canonical shared LLM/runtime contracts
+- [x] 2. Introduce canonical shared LLM/runtime contracts
 
   **What to do**: Create the shared type system under `src/llm/` and update the plan’s conceptual contracts into code-ready definitions. Define one canonical `NovelContext`, one canonical `AgentType`, category parameters separate from fallback candidates, and a minimal `LLMResponse` shape that includes degradation state. Keep this task contract-only; do not implement provider calls here.
   **Must NOT do**: Do not retrofit `src/utils/categories.ts` into the new runtime, do not add multi-provider abstractions beyond what Anthropic-first MVP needs, and do not add persisted canon/session files yet.
@@ -187,7 +187,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(llm): add canonical runtime contracts` | Files: `src/llm/types.ts`, `src/llm/chains.ts`, related tests
 
-- [ ] 3. Implement prompt asset strategy and prompt pipeline
+- [x] 3. Implement prompt asset strategy and prompt pipeline
 
   **What to do**: Decide and implement the runtime-safe prompt asset strategy, then add `PromptLoader`, `PromptBuilder`, and prompt types. The decision for this repo is: keep prompt sources in `src/agents/prompts/*.md`, copy them into build output during build, and make the loader prefer build-relative assets with a source-tree fallback for local development. `PromptBuilder` must compose scaffold + agent instructions + user input; the provider client must not build prompts.
   **Must NOT do**: Do not leave `process.cwd()/src/...` as the sole runtime path, do not duplicate file-loading logic inside the builder, and do not introduce Handlebars-style templating in MVP.
@@ -226,7 +226,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(prompts): add runtime-safe prompt pipeline` | Files: `src/prompts/*`, prompt copy/build helper, prompt tests, build script updates
 
-- [ ] 4. Implement a plugin-scoped ContextManager using existing persisted state/todos
+- [x] 4. Implement a plugin-scoped ContextManager using existing persisted state/todos
 
   **What to do**: Add `src/context/manager.ts` as a plugin-scoped service that assembles runtime `NovelContext` from what the repo already persists today: `ProjectState` and todo files. Keep `canon` as a runtime adaptation layer over current project/todo data plus empty narrative arrays, and keep `sessionSummary`, `agentMemory`, and `recentConversation` memory-only for MVP. Record turns per project key to prevent context bleed across projects.
   **Must NOT do**: Do not invent new persisted canon/memory/session files in MVP, do not instantiate a new manager inside agents, and do not load every historical turn into the prompt.
@@ -266,7 +266,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(context): add plugin scoped novelist context manager` | Files: `src/context/manager.ts`, context tests, any small helper types
 
-- [ ] 5. Implement Anthropic provider runtime and resilient fallback traversal
+- [x] 5. Implement Anthropic provider runtime and resilient fallback traversal
 
   **What to do**: Implement the Anthropic provider adapter plus a resilient runtime client that resolves generation params and fallback candidates by agent type at execution time. The runtime must try the first candidate, then the next candidate on provider/model failure, and only then degrade to offline static fallback. Keep provider support Anthropic-only in this task; expose the runtime behind a single client interface used by all migrated agents.
   **Must NOT do**: Do not add OpenAI/OpenCode clients, do not perform static fallback directly inside the provider client, and do not hide degradation state from callers.
@@ -306,7 +306,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(llm): add anthropic runtime and fallback traversal` | Files: `src/llm/anthropic-client.ts`, `src/llm/factory.ts`, `src/llm/chains.ts`, LLM tests, dependency updates
 
-- [ ] 6. Wire AgentContext through `base.ts`, `director.ts`, and `index.ts`
+- [x] 6. Wire AgentContext through `base.ts`, `director.ts`, and `index.ts`
 
   **What to do**: Update the shared agent contract so migrated agents receive one injected `AgentContext` containing `directory`, plugin-scoped `ContextManager`, and the resilient LLM client. Initialize those shared services once in `src/index.ts`, preserve Director’s current routing semantics, and pass the same context object through delegation so migrated agents can use the shared core without per-agent construction.
   **Must NOT do**: Do not redesign Director’s intent behavior, do not add multi-agent chain orchestration in MVP, and do not keep mixed old/new `handle()` signatures alive after this task lands.
@@ -345,7 +345,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(runtime): inject shared agent context through plugin wiring` | Files: `src/index.ts`, `src/agents/base.ts`, `src/agents/director.ts`, wiring tests
 
-- [ ] 7. Migrate `ConceptAgent` as the smallest safe MVP slice
+- [x] 7. Migrate `ConceptAgent` as the smallest safe MVP slice
 
   **What to do**: Replace the current static Concept behavior with the new prompt pipeline + context + resilient client flow while preserving a non-empty offline response. Use `src/agents/prompts/concept.md` as the instruction source, build a Concept-specific scaffold, and record both user and assistant turns through the shared context lifecycle. This task establishes the first production-like LLM path.
   **Must NOT do**: Do not widen MVP by migrating additional agents inside this task, do not require a project to exist before `@concept` works, and do not bypass the shared prompt/context runtime with per-agent shortcuts.
@@ -385,7 +385,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(concept): migrate concept agent to llm runtime` | Files: `src/agents/concept.ts`, Concept tests, any scaffold helpers
 
-- [ ] 8. Roll out planning agents: `world-builder.ts`, `character.ts`, `plot.ts`
+- [x] 8. Roll out planning agents: `world-builder.ts`, `character.ts`, `plot.ts`
 
   **What to do**: Migrate the three planning-phase agents as a batch, reusing the same runtime contracts and prompt pipeline proven by Concept. Each agent gets its own scaffold and uses the same category params/fallback traversal pattern; no special orchestration or cross-agent chaining is added. Maintain static fallback responses for each agent and keep project-null handling safe.
   **Must NOT do**: Do not add bootstrap chain execution, do not introduce new persisted canon files, and do not refactor Director routing beyond what is required for direct delegation.
@@ -424,7 +424,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(planning): migrate world character and plot agents` | Files: `src/agents/world-builder.ts`, `src/agents/character.ts`, `src/agents/plot.ts`, related tests
 
-- [ ] 9. Roll out drafting/review agents: `scene.ts`, `dialogue.ts`, `critic.ts`, `editor.ts`
+- [x] 9. Roll out drafting/review agents: `scene.ts`, `dialogue.ts`, `critic.ts`, `editor.ts`
 
   **What to do**: Migrate the remaining drafting and review agents after the planning agents are stable. `scene.ts` and `dialogue.ts` should use drafting params, `critic.ts` should use critique params, and `editor.ts` should use editing params. Preserve each file’s current fallback posture and avoid introducing chain orchestration; Director continues single-agent delegation.
   **Must NOT do**: Do not add `scenePolish` chain execution, do not force Critic or Editor to mutate canon state, and do not broaden runtime behavior beyond the shared client/context/prompt pipeline.
@@ -463,7 +463,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 
   **Commit**: YES | Message: `feat(agents): migrate drafting and review agents` | Files: `src/agents/scene.ts`, `src/agents/dialogue.ts`, `src/agents/critic.ts`, `src/agents/editor.ts`, related tests
 
-- [ ] 10. Stabilize the integrated runtime and prepare release readiness
+- [x] 10. Stabilize the integrated runtime and prepare release readiness
 
   **What to do**: Perform the final repo-side stabilization pass: ensure scripts are coherent, `.env.example` is accurate, prompt asset copying is part of the expected build path, obsolete contradictions in code comments are removed, and the release surface is documented around MVP constraints. Add or update smoke tests for Director basics, no-key degradation, prompt asset loading after build, and cross-project context isolation.
   **Must NOT do**: Do not add new features, do not expand to multi-provider support, and do not sneak in Director chain orchestration or persistent narrative memory.

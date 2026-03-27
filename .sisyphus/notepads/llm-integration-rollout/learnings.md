@@ -1,0 +1,2 @@
+- 2026-03-27 F4 scope check pattern: combine provider/streaming/chain/persistence greps with targeted reads of `src/llm/*`, `src/context/manager.ts`, and `src/agents/director.ts` to validate guardrails quickly.
+- 2026-03-27 F4 verification note: when TypeScript LSP is unavailable in the environment, `npm run typecheck` + `npm run build` provides practical compile-level safety evidence.
