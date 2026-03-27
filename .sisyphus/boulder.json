@@ -1,0 +1,13 @@
+{
+  "active_plan": "/Users/poeticdev/Documents/workspace/oh-my-novelist/.sisyphus/plans/llm-integration-rollout.md",
+  "started_at": "2026-03-27T05:49:14.392Z",
+  "session_ids": [
+    "ses_2e0f0ee10ffefhsy3m5D2Mw13j"
+  ],
+  "plan_name": "llm-integration-rollout",
+  "agent": "atlas",
+  "total_tasks": 48,
+  "completed_tasks": 0,
+  "current_wave": 1,
+  "current_task": "Task 1: Add a real test harness and baseline failing specs"
+}
