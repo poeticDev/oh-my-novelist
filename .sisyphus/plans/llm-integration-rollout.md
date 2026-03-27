@@ -108,7 +108,7 @@ Wave 5: Task 10 (stabilization and release readiness)
 > Implementation + Test = ONE task. Never separate.
 > EVERY task MUST have: Agent Profile + Parallelization + QA Scenarios.
 
-- [ ] 1. Add a real test harness and baseline failing specs
+- [x] 1. Add a real test harness and baseline failing specs
 
   **What to do**: Add a lightweight Node-compatible test runner and wire it into `package.json` so the repo has a stable automated verification entrypoint before any contract changes land. Create the first failing tests for fallback resolution, prompt loading, prompt building, context isolation, and offline degradation so every later task can proceed TDD-first.
   **Must NOT do**: Do not add browser/E2E frameworks, snapshot-heavy tests, or integration tests that require the real Anthropic API.
