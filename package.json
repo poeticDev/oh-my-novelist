@@ -5,10 +5,11 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run copy-prompts",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "test": "vitest"
+    "test": "vitest",
+    "copy-prompts": "mkdir -p dist/agents/prompts && cp src/agents/prompts/*.md dist/agents/prompts/"
   },
   "keywords": [
     "opencode",
@@ -23,6 +24,7 @@
     "type": "plugin"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "zod": "^4.1.8"
   },
   "devDependencies": {
