@@ -1,5 +1,5 @@
 import type { TodoManagerTool, TodoResponse } from "../tools/todo-manager.js";
-import type { BaseAgent } from "./base.js";
+import type { BaseAgent, AgentContext } from "./base.js";
 import type { ProjectState } from "../utils/state.js";
 
 export class DirectorAgent {
@@ -9,11 +9,17 @@ export class DirectorAgent {
   async handle(
     content: string,
     project: string | null,
-    agents?: Record<string, BaseAgent>,
-    todoManager?: TodoManagerTool,
-    projectState?: ProjectState | null
+    agents: Record<string, BaseAgent>,
+    context: AgentContext
   ): Promise<string> {
     const lowerContent = content.toLowerCase();
+
+    const todoManager = context.contextManager as unknown as TodoManagerTool;
+    let projectState: ProjectState | null = null;
+    if (project) {
+      const novelContext = context.contextManager.build("director", project);
+      projectState = novelContext.canon?.project ?? null;
+    }
 
     if (lowerContent.includes("help") || lowerContent.includes("도움") || lowerContent.includes("?") || lowerContent.includes("사용법")) {
       return this.getHelpMessage(project);
@@ -27,13 +33,9 @@ export class DirectorAgent {
       return this.getProjectSummary(project, projectState, todoManager);
     }
 
-    if (!agents) {
-      return "오류: Agents가 초기화되지 않았습니다. 플러그인을 다시 로드해 주세요.";
-    }
-
     const agentKey = this.selectSpecialistAgent(content);
     if (agentKey && agents[agentKey]) {
-      const response = await agents[agentKey].handle(content, project);
+      const response = await agents[agentKey].handle(content, project, context);
       return this.wrapDelegatedResponse(agentKey, response, project);
     }
 
@@ -241,9 +243,9 @@ ${response}
     message += `• action: create/list/update/progress\n\n`;
 
     message += `⚠️ 현재 제한 사항:\n`;
-    message += `• 에이전트는 정적 응답을 제공합니다 (LLM 미연동)\n`;
     message += `• Todo 상태는 수동으로 업데이트해야 합니다\n`;
-    message += `• 템플릿 생성은 아직 지원되지 않습니다`;
+    message += `• 템플릿 생성은 아직 지원되지 않습니다\n`;
+    message += `• AI 응답을 위해서는 ANTHROPIC_API_KEY 설정이 필요합니다`;
 
     return message;
   }

@@ -12,8 +12,11 @@ import { SceneAgent } from "./agents/scene.js";
 import { DialogueAgent } from "./agents/dialogue.js";
 import { CriticAgent } from "./agents/critic.js";
 import { EditorAgent } from "./agents/editor.js";
+import type { AgentContext, BaseAgent } from "./agents/base.js";
 
 import { TodoManagerTool } from "./tools/todo-manager.js";
+import { ContextManager } from "./context/manager.js";
+import { createLLMClient } from "./llm/factory.js";
 
 function getTextFromParts(parts: Part[]): string {
   return parts
@@ -37,8 +40,9 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   const state = loadState(directory);
   let currentProject = state.currentProject;
   
-  const agents = {
-    director: new DirectorAgent(),
+  const director = new DirectorAgent();
+  
+  const agents: Record<string, BaseAgent> = {
     concept: new ConceptAgent(),
     worldBuilder: new WorldBuilderAgent(),
     character: new CharacterAgent(),
@@ -50,6 +54,17 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   };
   
   const todoManager = new TodoManagerTool(directory);
+  
+  const contextManager = new ContextManager({ baseDir: directory });
+  const llmClient = createLLMClient({ 
+    apiKey: process.env.ANTHROPIC_API_KEY 
+  });
+  
+  const agentContext: AgentContext = {
+    directory,
+    contextManager,
+    llmClient
+  };
   
   return {
     tool: {
@@ -177,12 +192,11 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
       const activeProject = resolveActiveProject(state);
       const projectState = getProjectStateOrNull(directory, activeProject);
       
-      const response = await agents.director.handle(
+      const response = await director.handle(
         content, 
         activeProject, 
         agents,
-        todoManager,
-        projectState
+        agentContext
       );
 
       output.parts.push({
