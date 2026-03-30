@@ -245,7 +245,7 @@ ${response}
     message += `⚠️ 현재 제한 사항:\n`;
     message += `• Todo 상태는 수동으로 업데이트해야 합니다\n`;
     message += `• 템플릿 생성은 아직 지원되지 않습니다\n`;
-    message += `• AI 응답을 위해서는 ANTHROPIC_API_KEY 설정이 필요합니다`;
+    message += `• AI 응답을 위해서는 OpenCode에서 /connect 및 /models 설정이 필요합니다`;
 
     return message;
   }

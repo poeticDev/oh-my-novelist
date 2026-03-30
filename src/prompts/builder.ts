@@ -1,4 +1,4 @@
-import type { PromptScaffold, PromptVariables, BuiltPrompt } from "./types.js";
+import type { PromptScaffold, PromptVariables, BuiltPrompt, PromptBuildOptions } from "./types.js";
 import { PromptLoader } from "./loader.js";
 
 export class PromptBuilder {
@@ -7,9 +7,10 @@ export class PromptBuilder {
   build(
     agentType: string,
     scaffold: PromptScaffold,
-    variables: PromptVariables
+    variables: PromptVariables,
+    options: PromptBuildOptions = {}
   ): BuiltPrompt {
-    const agentInstructions = this.loader.load(agentType);
+    const agentInstructions = this.loader.load(agentType, options.family);
 
     const sections: string[] = [
       `# Role\n${scaffold.role}`,

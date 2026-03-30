@@ -130,7 +130,7 @@ describe('Resilient LLM Client', () => {
 
       expect(response.degradation).toBe('offline');
       expect(response.error).toBeDefined();
-      expect(mockFetch).toHaveBeenCalledTimes(3);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -246,7 +246,7 @@ describe('Resilient LLM Client', () => {
       await vi.runAllTimersAsync();
       const response = await responsePromise;
 
-      expect(mockFetch).toHaveBeenCalledTimes(6);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
       expect(response.degradation).toBe('offline');
       expect(response.error).toContain('Network error');
     }, 10000);
@@ -270,7 +270,7 @@ describe('Resilient LLM Client', () => {
       await vi.runAllTimersAsync();
       const response = await responsePromise;
 
-      expect(mockFetch).toHaveBeenCalledTimes(3);
+      expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(response.degradation).toBe('offline');
     });
   });

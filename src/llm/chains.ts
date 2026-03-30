@@ -1,9 +1,9 @@
 import type {
   AgentType,
   GenerationParams,
-  ModelCandidate,
   ModelCategory
 } from "./types.js";
+import { DEFAULT_ANTHROPIC_MODEL } from "../config/policy.js";
 
 export const CATEGORY_PARAMS: Record<ModelCategory, GenerationParams> = {
   planning: {
@@ -40,28 +40,12 @@ export const AGENT_CATEGORIES: Record<AgentType, ModelCategory> = {
   editor: "editing"
 };
 
-const DEFAULT_CANDIDATES: ModelCandidate[] = [
-  { provider: "anthropic", model: "claude-3-5-sonnet-20241022" },
-  { provider: "anthropic", model: "claude-3-5-haiku-20241022" },
-  { provider: "anthropic", model: "claude-3-haiku-20240229" }
-];
-
-export const AGENT_FALLBACK_CHAINS: Record<AgentType, ModelCandidate[]> = {
-  director: DEFAULT_CANDIDATES,
-  concept: DEFAULT_CANDIDATES,
-  worldBuilder: DEFAULT_CANDIDATES,
-  character: DEFAULT_CANDIDATES,
-  plot: DEFAULT_CANDIDATES,
-  scene: DEFAULT_CANDIDATES,
-  dialogue: DEFAULT_CANDIDATES,
-  critic: DEFAULT_CANDIDATES,
-  editor: DEFAULT_CANDIDATES
-};
+export const LEGACY_DEFAULT_MODEL_ID = DEFAULT_ANTHROPIC_MODEL;
 
 export interface GenerationConfig {
   category: ModelCategory;
   params: GenerationParams;
-  candidates: ModelCandidate[];
+  defaultModelId: string;
 }
 
 export function resolveGenerationConfig(agentType: AgentType): GenerationConfig {
@@ -74,6 +58,6 @@ export function resolveGenerationConfig(agentType: AgentType): GenerationConfig 
   return {
     category,
     params: CATEGORY_PARAMS[category],
-    candidates: AGENT_FALLBACK_CHAINS[agentType]
+    defaultModelId: LEGACY_DEFAULT_MODEL_ID
   };
 }

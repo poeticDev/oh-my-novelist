@@ -2,7 +2,7 @@
  * Tests for LLM chain utilities
  * 
  * These tests define the expected behavior for:
- * - resolveGenerationConfig: Returns correct category params and fallback candidates separately
+ * - resolveGenerationConfig: Returns correct category params and legacy compatibility defaults separately
  */
 
 import { describe, it, expect } from 'vitest';
@@ -10,30 +10,26 @@ import {
   resolveGenerationConfig,
   CATEGORY_PARAMS,
   AGENT_CATEGORIES,
-  AGENT_FALLBACK_CHAINS
+  LEGACY_DEFAULT_MODEL_ID
 } from '../../src/llm/chains.js';
 import type { AgentType, ModelCategory } from '../../src/llm/types.js';
 
 describe('LLM Chains', () => {
   describe('resolveGenerationConfig', () => {
-    it('should return category params separately from fallback candidates', () => {
+    it('should return category params separately from the legacy default model id', () => {
       const config = resolveGenerationConfig('concept');
       
-      // Verify structure: params and candidates are separate properties
+      // Verify structure: params and defaultModelId are separate properties
       expect(config).toHaveProperty('category');
       expect(config).toHaveProperty('params');
-      expect(config).toHaveProperty('candidates');
+      expect(config).toHaveProperty('defaultModelId');
       
       // Verify params is GenerationParams structure
       expect(config.params).toHaveProperty('temperature');
       expect(config.params).toHaveProperty('maxTokens');
       expect(config.params).toHaveProperty('topP');
       
-      // Verify candidates is ModelCandidate array
-      expect(Array.isArray(config.candidates)).toBe(true);
-      expect(config.candidates.length).toBeGreaterThan(0);
-      expect(config.candidates[0]).toHaveProperty('provider');
-      expect(config.candidates[0]).toHaveProperty('model');
+      expect(config.defaultModelId).toBe('anthropic/claude-3-5-sonnet-20241022');
     });
 
     it('should return correct category params for each agent type', () => {
@@ -98,25 +94,10 @@ describe('LLM Chains', () => {
       expect(editorConfig.params.topP).toBe(0.3);
     });
 
-    it('should return fallback candidates in priority order', () => {
+    it('should return the legacy Anthropic compatibility default model id', () => {
       const config = resolveGenerationConfig('concept');
       
-      // Verify fallback candidates are ordered
-      expect(config.candidates).toHaveLength(3);
-      
-      // Check priority order: sonnet > haiku > 3-haiku
-      expect(config.candidates[0]).toEqual({
-        provider: 'anthropic',
-        model: 'claude-3-5-sonnet-20241022'
-      });
-      expect(config.candidates[1]).toEqual({
-        provider: 'anthropic',
-        model: 'claude-3-5-haiku-20241022'
-      });
-      expect(config.candidates[2]).toEqual({
-        provider: 'anthropic',
-        model: 'claude-3-haiku-20240229'
-      });
+      expect(config.defaultModelId).toBe('anthropic/claude-3-5-sonnet-20241022');
     });
 
     it('should handle missing optional parameters gracefully', () => {
@@ -163,10 +144,8 @@ describe('LLM Chains', () => {
       });
     });
 
-    it('should export AGENT_FALLBACK_CHAINS mapping', () => {
-      expect(AGENT_FALLBACK_CHAINS.concept).toHaveLength(3);
-      expect(AGENT_FALLBACK_CHAINS.director).toHaveLength(3);
-      expect(AGENT_FALLBACK_CHAINS.editor).toHaveLength(3);
+    it('should export the legacy compatibility default model id', () => {
+      expect(LEGACY_DEFAULT_MODEL_ID).toBe('anthropic/claude-3-5-sonnet-20241022');
     });
   });
 });

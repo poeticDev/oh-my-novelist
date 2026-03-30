@@ -49,3 +49,7 @@ export interface BuiltPrompt {
   /** User prompt containing the actual request */
   user: string;
 }
+
+export interface PromptBuildOptions {
+  family?: "claude" | "gpt";
+}

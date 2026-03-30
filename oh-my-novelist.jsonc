@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "global": {
+    "defaultModel": "anthropic/claude-3-5-sonnet-20241022",
+    "defaultFamily": "claude"
+  },
+  "categories": {
+    "editing": {
+      "defaultModel": "openai/gpt-4o-mini",
+      "defaultFamily": "gpt"
+    }
+  },
+  "agents": {
+    "editor": {
+      "preferredFamily": "gpt"
+    }
+  }
+}

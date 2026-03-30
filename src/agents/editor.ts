@@ -23,6 +23,7 @@ export class EditorAgent implements BaseAgent {
 
     // 3. Build scaffold using PromptBuilder
     const promptBuilder = new PromptBuilder(promptLoader);
+    const resolvedModel = context.llmClient.resolveModel("editor");
     const prompt = promptBuilder.build(
       "editor",
       {
@@ -46,6 +47,9 @@ export class EditorAgent implements BaseAgent {
       },
       {
         userRequest: content
+      },
+      {
+        family: resolvedModel.family
       }
     );
 

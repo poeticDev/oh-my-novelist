@@ -1,69 +1,35 @@
 {
-  "active_plan": "/Users/poeticdev/Documents/workspace/oh-my-novelist/.sisyphus/plans/llm-integration-rollout.md",
-  "started_at": "2026-03-27T05:49:14.392Z",
+  "active_plan": "/Users/poeticdev/Documents/workspace/oh-my-novelist/.sisyphus/plans/cleanup-duplicate-agents-and-legacy.md",
+  "started_at": "2026-03-30T08:50:44.867Z",
   "session_ids": [
     "ses_2e0f0ee10ffefhsy3m5D2Mw13j",
-    "ses_2d22656c7ffe297dEVwdhjUvSC",
-    "ses_2d2221c61ffeHNTgAodY9TKL0d",
-    "ses_2d21c3c8cffe4TGlj0LCfW0DGL",
-    "ses_2d2111b04ffe8Cjq8fDZg2kE7W",
-    "ses_2d20e3c10ffenrwYoApNGWljaz",
-    "ses_2d204137efferp48iR1nvqLxjq",
-    "ses_2d1fff876ffeUfRwfWclQeLAWv",
-    "ses_2d1fda70fffezuhjiwEgSvczJy",
-    "ses_2d1fcdafcffe4T94HZhvVXH184",
-    "ses_2d1f80d8fffeJicrQl6pVnBjPU",
-    "ses_2d1f43e6affeZ4iLIN2V9Aljby",
-    "ses_2d1f3c218ffeU02xPJU84ljuZW",
-    "ses_2d1f4c068ffe0CGEr1oCD2yGe6",
-    "ses_2d1f351f8ffe6NBeYceCgW26mj",
-    "ses_2d1eb2335ffe533xK8UzhiFq7V",
-    "ses_2d1e83088ffeN0uH8A3ysYvyx9"
+    "ses_2c20d5e11ffe0JL8Dw7SAOqVus",
+    "ses_2c209460affeZ7BUUVTFNyF6AB",
+    "ses_2c2090efbffeoXdhSNm9XhmGTZ",
+    "ses_2c208d7b7ffeK2ks3TFPupQ7Jg",
+    "ses_2c2087db3ffeRSUaDUDo5XWfZW",
+    "ses_2c1fa18b8ffe7H1ssEm6dWZDrl"
   ],
-  "plan_name": "llm-integration-rollout",
+  "plan_name": "cleanup-duplicate-agents-and-legacy",
   "agent": "atlas",
-  "total_tasks": 48,
-  "completed_tasks": 2,
-  "current_wave": 2,
-  "current_task": "Task 3: Implement prompt asset strategy and prompt pipeline",
   "task_sessions": {
     "todo:1": {
       "task_key": "todo:1",
       "task_label": "1",
-      "task_title": "Add a real test harness and baseline failing specs",
-      "session_id": "ses_2d22656c7ffe297dEVwdhjUvSC",
-      "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-03-27T05:54:36.100Z",
-      "status": "completed"
-    },
-    "todo:2": {
-      "task_key": "todo:2",
-      "task_label": "2",
-      "task_title": "Introduce canonical shared LLM/runtime contracts",
-      "session_id": "ses_2d2221c61ffeHNTgAodY9TKL0d",
+      "task_title": "Establish cleanup baseline and freeze the protected keep-set",
+      "session_id": "ses_2c20d5e11ffe0JL8Dw7SAOqVus",
       "agent": "Sisyphus-Junior",
       "category": "unspecified-high",
-      "updated_at": "2026-03-27T05:59:55.293Z",
-      "status": "completed"
+      "updated_at": "2026-03-30T08:56:38.501Z"
     },
-    "todo:3": {
-      "task_key": "todo:3",
-      "task_label": "3",
-      "task_title": "Implement prompt asset strategy and prompt pipeline",
-      "session_id": "ses_2d1eb2335ffe533xK8UzhiFq7V",
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "Clean low-risk docs and config references tied to removed surfaces",
+      "session_id": "ses_2c2016323ffezVFJvqMN6w6q7S",
       "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-03-27T06:59:17.008Z"
-    },
-    "final-wave:f1": {
-      "task_key": "final-wave:f1",
-      "task_label": "F1",
-      "task_title": "Plan Compliance Audit — oracle",
-      "session_id": "ses_2d1e83088ffeN0uH8A3ysYvyx9",
-      "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-03-27T07:00:33.908Z"
+      "category": "writing",
+      "updated_at": "2026-03-30T09:11:54.666Z"
     }
   }
 }

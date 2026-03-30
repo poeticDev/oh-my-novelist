@@ -17,6 +17,8 @@ import type { AgentContext, BaseAgent } from "./agents/base.js";
 import { TodoManagerTool } from "./tools/todo-manager.js";
 import { ContextManager } from "./context/manager.js";
 import { createLLMClient } from "./llm/factory.js";
+import { loadPluginPolicyConfig } from "./config/policy.js";
+import type { OpenCodeClientLike } from "./llm/opencode-client.js";
 
 function getTextFromParts(parts: Part[]): string {
   return parts
@@ -54,10 +56,12 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   };
   
   const todoManager = new TodoManagerTool(directory);
+  const { config: policyConfig } = loadPluginPolicyConfig(directory);
   
   const contextManager = new ContextManager({ baseDir: directory });
   const llmClient = createLLMClient({ 
-    apiKey: process.env.ANTHROPIC_API_KEY 
+    policyConfig,
+    opencodeClient: input.client as OpenCodeClientLike
   });
   
   const agentContext: AgentContext = {

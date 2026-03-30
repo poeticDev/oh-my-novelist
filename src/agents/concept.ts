@@ -23,6 +23,7 @@ export class ConceptAgent implements BaseAgent {
 
     // 3. Build scaffold using PromptBuilder
     const promptBuilder = new PromptBuilder(promptLoader);
+    const resolvedModel = context.llmClient.resolveModel("concept");
     const prompt = promptBuilder.build(
       "concept",
       {
@@ -43,6 +44,9 @@ export class ConceptAgent implements BaseAgent {
       },
       {
         userRequest: content
+      },
+      {
+        family: resolvedModel.family
       }
     );
 
