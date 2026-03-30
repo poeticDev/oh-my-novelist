@@ -1,0 +1,9 @@
+# Evidence: npm run build output
+
+> oh-my-novelist@0.1.0 build
+> tsc && npm run copy-prompts
+
+> oh-my-novelist@0.1.0 copy-prompts
+> mkdir -p dist/agents/prompts && cp src/agents/prompts/*.md dist/agents/prompts/
+
+RESULT: Build passed successfully

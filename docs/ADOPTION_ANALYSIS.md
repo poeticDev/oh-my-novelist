@@ -133,41 +133,7 @@ todo_integration:
 
 ---
 
-## 4. ✅ 도입 권장: 스킬 시스템 개선
-
-### 현재 상태
-- Markdown 문서로만 정의
-
-### 제안: MCP 통합 스킬
-```yaml
-# skills/novel-writing/skill.yaml
----
-name: novel-writing
-description: 웹소설 창작 전문 스킬
-mcp:
-  obsidian-vault:
-    command: node
-    args: ["./tools/obsidian-mcp.js"]
-  template-generator:
-    command: python
-    args: ["./tools/template_mcp.py"]
----
-
-# Novel Writing Skill Prompt
-
-당신은 웹소설 창작 전문가입니다...
-```
-
-### MCP 도구 예시
-1. **Obsidian Vault MCP**: Vault 읽기/쓰기/검색
-2. **Template MCP**: 템플릿 생성 및 관리
-3. **Export MCP**: 다양한 형식으로 낸내기
-
-**우선순위**: 높음 ⭐⭐⭐⭐⭐
-
----
-
-## 5. ⚠️ 부분 도입: 백그라운드 에이전트
+## 4. ⚠️ 부분 도입: 백그라운드 에이전트
 
 ### 적용 가능한 시나리오
 ```typescript
@@ -194,34 +160,6 @@ const trends = await background_output(researchTask)
 
 ---
 
-## 6. ⚠️ 부분 도입: 명령어 시스템
-
-### 적용 가능한 명령어
-```
-/novel-new [작품명]       # 새 작품 시작
-/novel-continue [작품명]  # 기존 작품 이어서
-/novel-outline            # 전체 구조 보기
-/novel-stats              # 작성 통계
-/novel-export [format]    # 낸내기 (epub, pdf)
-```
-
-### 구현 방식
-```typescript
-// .opencode/commands/novel-new.ts
-export default defineCommand({
-  name: "novel-new",
-  description: "새 웹소설 프로젝트 시작",
-  handler: async (args) => {
-    const projectName = args[0]
-    // 프로젝트 생성 로직
-  }
-})
-```
-
-**우선순위**: 중간 ⭐⭐⭐⭐
-
----
-
 ## 7. ❌ 미도입: 해시 앵커드 편집
 
 ### 이유
@@ -233,7 +171,7 @@ export default defineCommand({
 
 ---
 
-## 8. ⚠️ 부분 도입: 훅 시스템
+## 6. ⚠️ 부분 도입: 훅 시스템
 
 ### 적용 가능한 훅
 ```typescript
@@ -255,7 +193,7 @@ hooks.message((content) => {
 
 ---
 
-## 9. ❌ 미도입: LSP/AST-Grep 도구
+## 7. ❌ 미도입: LSP/AST-Grep 도구
 
 ### 이유
 - 소설은 코드가 아님
@@ -266,7 +204,7 @@ hooks.message((content) => {
 
 ---
 
-## 10. ✅ 도입 권장: 에이전트 위임 패턴
+## 8. ✅ 도입 권장: 에이전트 위임 패턴
 
 ### 6가지 필수 프롬프트 요소 적용
 ```typescript
@@ -302,11 +240,10 @@ task({
 
 ### 단계적 도입 (Priority 2)
 5. **Todo 관리**: 창작 과정 추적
-6. **명령어 시스템**: 자주 쓰는 작업 단축
-7. **백그라운드 에이전트**: 병렬 조사/검증
+6. **백그라운드 에이전트**: 병렬 조사/검증
 
 ### 고려중 (Priority 3)
-8. **훅 시스템**: 검증 및 자동화
+6. **훅 시스템**: 검증 및 자동화
 
 ### 미도입
 9. 해시 앵커드 편집, LSP/AST-Grep (소설에는 부적합)
@@ -318,6 +255,6 @@ task({
 1. **카테고리 시스템 구현**: `.opencode/config.yaml`에 정의
 2. **인텐트 게이트 추가**: Director 에이전트에 라우팅 로직
 3. **MCP 도구 개발**: Obsidian 연동 Python/Node 스크립트
-4. **명령어 구현**: 자주 쓰는 작업을 slash command로
+4. **스킬 MCP 개발**: Obsidian/템플릿/낸내기 도구 연동
 
 **어떤 것부터 시작할까요?**

@@ -1,0 +1,5 @@
+# Evidence: No retained references to legacy skill surface
+# Pattern: skills/novel-writing|vault_read|vault_write|template_generate
+# Searched in: src, tests, docs
+
+RESULT: No matches found

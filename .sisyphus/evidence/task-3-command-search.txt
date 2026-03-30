@@ -1,0 +1,9 @@
+docs/ADOPTION_ANALYSIS.md:201:/novel-new [작품명]       # 새 작품 시작
+docs/ADOPTION_ANALYSIS.md:202:/novel-continue [작품명]  # 기존 작품 이어서
+docs/ADOPTION_ANALYSIS.md:204:/novel-stats              # 작성 통계
+docs/ADOPTION_ANALYSIS.md:205:/novel-export [format]    # 낸내기 (epub, pdf)
+docs/ADOPTION_ANALYSIS.md:210:// .opencode/commands/novel-new.ts
+docs/ADOPTION_ANALYSIS.md:212:  name: "novel-new",
+docs/TEST_SIMULATION.md:5:/novel-new "30대 마법사 개발자" --template fantasy
+docs/TEST_SIMULATION.md:12:command: novel-new
+docs/TEST_SIMULATION.md:402:/novel-todo progress "30대 마법사 개발자"

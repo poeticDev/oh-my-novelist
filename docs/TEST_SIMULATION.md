@@ -2,14 +2,14 @@
 
 ## 사용자 입력
 ```
-/novel-new "30대 마법사 개발자" --template fantasy
+novelist_init_project(projectName: "30대 마법사 개발자", template: "fantasy")
 ```
 
 ## 시스템 동작
 
-### 1. 명령어 파싱
+### 1. 프로젝트 생성
 ```yaml
-command: novel-new
+action: novelist_init_project
 parameters:
   project_name: "30대 마법사 개발자"
   template: fantasy
@@ -17,7 +17,7 @@ parameters:
   obsidian_sync: true (default)
 ```
 
-### 2. 프로젝트 생성 (Template Generator MCP)
+### 2. 자동 초기화 (Template Generator MCP)
 ```
 📁 생성된 구조:
 30대-마법사-개발자/
@@ -396,10 +396,10 @@ parameters:
 📍 ~/Obsidian/MyVault/04_novel/works/30대-마법사-개발자/
 ```
 
-## 명령어 테스트
+## 도구 호출 테스트
 
 ```
-/novel-todo progress "30대 마법사 개발자"
+novelist_todo(action: "progress", projectName: "30대 마법사 개발자")
 
 📊 30대 마법사 개발자 - 진행 상황
 
