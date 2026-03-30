@@ -1,0 +1,38 @@
+# Task 1: Hidden Dependencies Search Results
+# Date: 2025-03-30
+# Command: git grep -nE '\.opencode|src/commands/|obsidian-vault|template-generator|skills/novel-writing' -- .
+
+## Summary
+The following matches were found for the deletion set patterns:
+
+### In Deletion Set (Expected - Safe to Remove)
+1. .opencode/commands/novel-export.yaml:72 - mcp: obsidian-vault
+2. .opencode/commands/novel-new.yaml:42 - mcp: template-generator
+3. .opencode/commands/novel-new.yaml:62 - mcp: obsidian-vault
+4. skills/novel-writing/README.md - Multiple references to obsidian-vault, template-generator, .opencode/config.yaml
+5. skills/novel-writing/tools/MCP_README.md - References to obsidian-vault, template-generator
+6. src/commands/novel-export.ts:1 - import from obsidian-vault
+7. src/commands/novel-new.ts:1 - import from template-generator
+
+### In Docs to be Updated in Task 6
+8. docs/ADOPTION_ANALYSIS.md - References to .opencode/config.yaml, skills/novel-writing, obsidian-vault, template-generator
+9. CONFIGURATION.md:338 - .opencode/agents/ structure reference
+
+### In Keep-Set (Requires Cleanup Reference Update)
+10. src/tools/index.ts:2-3 - Exports from obsidian-vault.js and template-generator.js
+    - Note: This file will need updating in Task 2 when stub tools are deleted
+
+### False Positive (Keep-Set, No Action Needed)
+11. src/llm/factory.ts - References to `opencodeClient` 
+    - This is the OpenCode SDK client interface, NOT the .opencode/ directory
+    - Part of active runtime keep-set, do NOT remove
+
+## Conclusion
+- No hidden supported workflow dependencies were found in the runtime keep-set
+- All references in keep-set files are either:
+  - Expected cleanup work (src/tools/index.ts will be updated in Task 2)
+  - False positive naming overlap (opencodeClient vs .opencode/)
+- No deferral decisions needed - cleanup can proceed as planned
+
+# Exit Code: 0 (search completed)
+# Status: ANALYZED - No blocking dependencies found

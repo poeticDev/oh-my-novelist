@@ -1,0 +1,8 @@
+CONFIGURATION.md:338:.opencode/agents/
+docs/ADOPTION_ANALYSIS.md:17:# .opencode/config.yaml
+docs/ADOPTION_ANALYSIS.md:176:// .opencode/commands/novel-new.ts
+docs/ADOPTION_ANALYSIS.md:284:1. **카테고리 시스템 구현**: `.opencode/config.yaml`에 정의
+src/llm/factory.ts:48:    this.opencodeClient = options.opencodeClient;
+src/llm/factory.ts:81:    if (!this.opencodeClient && !this.apiKey) {
+src/llm/factory.ts:113:    if (this.opencodeClient) {
+src/llm/factory.ts:115:        return await executeWithOpenCode(this.opencodeClient, resolvedModelId, prompt);

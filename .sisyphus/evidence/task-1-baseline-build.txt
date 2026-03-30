@@ -1,0 +1,13 @@
+# Task 1: Baseline Build Results
+# Date: 2025-03-30
+# Command: npm run build
+
+> oh-my-novelist@0.1.0 build
+> tsc && npm run copy-prompts
+
+
+> oh-my-novelist@0.1.0 copy-prompts
+> mkdir -p dist/agents/prompts && cp src/agents/prompts/*.md dist/agents/prompts/
+
+# Exit Code: 0
+# Status: PASS - Build completed successfully
