@@ -1,0 +1,10 @@
+CONFIGURATION.md:36:- **Novelist 전용 모델 정책**: `oh-my-novelist.jsonc`가 소유
+CONFIGURATION.md:41:/connect
+CONFIGURATION.md:42:/models
+CONFIGURATION.md:49:repo root에 `oh-my-novelist.jsonc`를 두고 다음처럼 novelist 전용 정책만 설정합니다.
+CONFIGURATION.md:74:다음 항목은 OpenCode/provider 소유 범위이므로 `oh-my-novelist.jsonc`에 넣지 않습니다.
+README.md:98:- **Provider 연결과 모델 선택**: OpenCode에서 `/connect`, `/models`, provider 설정으로 관리
+README.md:99:- **Novelist 전용 정책 설정**: repo root `oh-my-novelist.jsonc`
+README.md:107:/connect
+README.md:108:/models
+README.md:129:### novelist 정책 설정 (`oh-my-novelist.jsonc`)

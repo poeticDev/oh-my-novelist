@@ -8,7 +8,6 @@ Configuration documentation for the oh-my-novelist OpenCode plugin.
 
 - OpenCode installed and configured
 - Node.js 18+ (for plugin runtime)
-- Obsidian (optional, for vault sync)
 
 ### Install via OpenCode CLI
 
@@ -29,194 +28,59 @@ opencode plugin list
 
 ---
 
-## Initial Setup
+## LLM / Model Configuration (OpenCode-native)
 
-### Project Folder Selection
+Oh My Novelist는 provider runtime을 직접 소유하지 않습니다.
 
-When you first run `@novel-new`, the plugin prompts for a project folder:
+- **Provider 연결 / 인증 / 모델 카탈로그**: OpenCode가 소유
+- **Novelist 전용 모델 정책**: `oh-my-novelist.jsonc`가 소유
 
-```
-📁 Select project folder:
-  > ~/Documents/novels/          (recommended)
-  > ~/Desktop/my-novel/
-  > Custom path...
-```
+### 1. OpenCode에서 provider 연결
 
-**Default behavior:**
-- Creates a new folder named after your novel
-- Stores all project files in a structured hierarchy
-- Remembers the last used directory
-
-### Obsidian Vault Path Configuration
-
-For Obsidian integration, configure the vault path:
-
-```yaml
-# ~/.config/opencode/plugins/oh-my-novelist/config.yaml
-obsidian:
-  enabled: true
-  vault_path: "/Users/yourname/Obsidian/MyVault"
-  sync_mode: "auto"  # auto | manual
+```text
+/connect
+/models
 ```
 
-**Setup steps:**
+provider API 키, custom endpoint, local model, transport option은 OpenCode 설정에서 관리합니다.
 
-1. Open Obsidian and note your vault location
-2. Run `@novel-config` to open settings
-3. Enter the full path to your vault
-4. Enable "Auto-sync to Obsidian" if desired
+### 2. novelist 정책 파일 설정
 
-### Default Settings
+repo root에 `oh-my-novelist.jsonc`를 두고 다음처럼 novelist 전용 정책만 설정합니다.
 
-Initial configuration defaults:
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `language` | `ko` | Primary language (ko/en) |
-| `auto_save` | `true` | Auto-save on changes |
-| `save_interval` | `30` | Auto-save interval (seconds) |
-| `template` | `default` | Project template name |
-| `obsidian.enabled` | `false` | Obsidian sync toggle |
-| `backup.enabled` | `true` | Auto-backup before major changes |
-
----
-
-## Configuration Options
-
-### Template Preferences
-
-Templates define the initial structure for new projects.
-
-**Available templates:**
-
-| Template | Description |
-|----------|-------------|
-| `default` | Standard web novel structure |
-| `romance` | Romance-focused with relationship arcs |
-| `fantasy` | Fantasy with world-building emphasis |
-| `thriller` | Thriller/suspense structure |
-
-**Set default template:**
-
-```yaml
-# config.yaml
-project:
-  default_template: "fantasy"
+```jsonc
+{
+  "version": "1.0",
+  "global": {
+    "defaultModel": "anthropic/claude-3-5-sonnet-20241022",
+    "defaultFamily": "claude"
+  },
+  "categories": {
+    "editing": {
+      "defaultModel": "openai/gpt-4o-mini",
+      "defaultFamily": "gpt"
+    }
+  },
+  "agents": {
+    "editor": {
+      "preferredFamily": "gpt"
+    }
+  }
+}
 ```
 
-**Override per project:**
+### 3. 이 파일에 넣으면 안 되는 항목
 
-```bash
-@novel-new "My Epic" --template fantasy
-```
+다음 항목은 OpenCode/provider 소유 범위이므로 `oh-my-novelist.jsonc`에 넣지 않습니다.
 
-### Auto-Save Settings
+- `apiKey`, `credentials`, `auth`
+- `baseURL`, `endpoint`, `url`
+- `transport`, `timeout`, `retries`, `headers`
+- `provider`, `providers`, `registry`, `adapter`
 
-Control how and when changes are saved:
+### 4. Anthropic 호환성 경로
 
-```yaml
-save:
-  auto_save: true          # Enable auto-save
-  interval: 30             # Seconds between saves
-  backup_before_write: true
-  max_backups: 10          # Keep last N backups
-```
-
-**Manual save:**
-
-```bash
-@novel-save              # Save current project
-@novel-save --backup     # Create backup before save
-```
-
-### Language Preferences
-
-The plugin supports Korean and English interfaces:
-
-```yaml
-language:
-  primary: "ko"           # ko | en
-  output: "ko"            # Generated content language
-  agent_prompts: "ko"     # Agent communication language
-```
-
-**Language-specific behavior:**
-
-| Setting | Korean (ko) | English (en) |
-|---------|-------------|--------------|
-| Agent prompts | Korean instructions | English instructions |
-| Template names | Korean defaults | English defaults |
-| UI labels | Korean interface | English interface |
-
----
-
-## Commands
-
-### @novel-new
-
-Start a new novel project.
-
-```bash
-@novel-new "작품명"
-@novel-new "My Novel" --template fantasy
-@novel-new "로맨스 소설" --path ~/Documents/novels/
-```
-
-**Options:**
-
-| Flag | Description |
-|------|-------------|
-| `--template` | Use specific template |
-| `--path` | Custom project directory |
-| `--no-obsidian` | Skip Obsidian sync setup |
-
-**Workflow:**
-
-1. Prompts for project location (if not specified)
-2. Creates directory structure
-3. Initializes project files from template
-4. Opens Director agent for initial brainstorming
-
-### @novel-continue
-
-Resume work on an existing project.
-
-```bash
-@novel-continue "작품명"
-@novel-continue "My Novel" --agent character
-@novel-continue "소설" --episode 5
-```
-
-**Options:**
-
-| Flag | Description |
-|------|-------------|
-| `--agent` | Start with specific agent |
-| `--episode` | Jump to specific episode |
-| `--last` | Continue from last session |
-
-**Workflow:**
-
-1. Loads project state
-2. Restores context from previous session
-3. Opens Director agent with project summary
-
-### @novel-config
-
-Open configuration settings.
-
-```bash
-@novel-config                    # Open all settings
-@novel-config obsidian           # Open Obsidian settings
-@novel-config --reset            # Reset to defaults
-```
-
-**Configuration categories:**
-
-- `general` - Language, auto-save, defaults
-- `obsidian` - Vault path, sync settings
-- `agents` - Agent behavior preferences
-- `templates` - Template management
+정책 파일이 없을 때는 기존 `ANTHROPIC_API_KEY` 기반 동작을 유지합니다. 이 경로는 전환기 호환성 목적이며, 장기적으로는 OpenCode provider 설정이 기본입니다.
 
 ---
 
@@ -271,113 +135,7 @@ my-novel/
 │   └── drafts/              # Draft versions
 │       └── ep-001-draft.md
 └── exports/                 # 내보내기
-    ├── manuscript.md        # Full manuscript
-    └── obsidian/            # Obsidian-formatted
-        └── synced-files/
+    └── manuscript.md        # Full manuscript
 ```
 
-### Agent Definitions
 
-```
-.opencode/agents/
-├── director/                # 단일 진입점
-│   ├── agent.md             # Agent definition
-│   └── prompts/             # Prompt templates
-├── concept/                 # 기획자
-├── world-builder/           # 세계관 설계사
-├── character/               # 캐릭터 디자이너
-├── plot/                    # 플롯 아키텍트
-├── scene/                   # 장면 작가
-├── dialogue/                # 대화 작가
-├── critic/                  # 비평가
-└── editor/                  # 편집자
-```
-
----
-
-## Configuration File Reference
-
-### Full config.yaml Example
-
-```yaml
-# Oh My Novelist Configuration
-# Location: ~/.config/opencode/plugins/oh-my-novelist/config.yaml
-
-# Project settings
-project:
-  default_template: "default"
-  default_path: "~/Documents/novels"
-  naming_convention: "kebab-case"  # kebab-case | snake_case | camelCase
-
-# Language settings
-language:
-  primary: "ko"
-  output: "ko"
-  agent_prompts: "ko"
-
-# Save behavior
-save:
-  auto_save: true
-  interval: 30
-  backup_before_write: true
-  max_backups: 10
-
-# Obsidian integration
-obsidian:
-  enabled: false
-  vault_path: ""
-  sync_mode: "auto"
-  folder_prefix: "Novels/"
-
-# Agent preferences
-agents:
-  default_agent: "director"
-  auto_summarize: true
-  context_window: 4000
-
-# Editor settings
-editor:
-  format_on_save: true
-  word_wrap: true
-  show_word_count: true
-```
-
----
-
-## Troubleshooting
-
-### Common Issues
-
-**Plugin not found after install:**
-
-```bash
-# Clear plugin cache
-opencode plugin cache clear
-
-# Reinstall
-opencode plugin uninstall oh-my-novelist
-opencode plugin install oh-my-novelist
-```
-
-**Obsidian sync not working:**
-
-1. Verify vault path is correct
-2. Check Obsidian is not running (file lock)
-3. Ensure write permissions on vault folder
-
-**Language not applying:**
-
-```bash
-# Force language setting
-@novel-config language --set ko
-```
-
-### Reset Configuration
-
-```bash
-# Reset all settings to defaults
-@novel-config --reset
-
-# Or manually delete config
-rm ~/.config/opencode/plugins/oh-my-novelist/config.yaml
-```

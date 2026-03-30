@@ -26,7 +26,7 @@ Oh My Novelist는 OpenCode 환경에서 작동하는 웹소설 창작 지원 플
 - ✅ **Director 상태 인식**: 현재 프로젝트, 진행 상황, 다음 작업 제안
 
 ### LLM 통합 기능
-- ✅ **Anthropic Claude 통합**: 모든 9개 에이전트가 Claude API를 통해 AI 응답 제공
+- ✅ **OpenCode-native 모델 정책 레이어**: provider/auth/runtime은 OpenCode가 담당하고, 플러그인은 novelist 전용 모델 정책과 프롬프트 라우팅을 담당
 - ✅ **오프라인 폴백 모드**: API 키 없이도 기본 기능 사용 가능
 - ✅ **컨텍스트 관리**: 대화 기록 및 프로젝트 상태 유지
 - ✅ **프롬프트 빌더**: 동적 프롬프트 생성 및 변수 치환
@@ -37,8 +37,6 @@ Oh My Novelist는 OpenCode 환경에서 작동하는 웹소설 창작 지원 플
 ## 계획된 기능 (Phase 2)
 
 - 📝 **템플릿 시스템**: 캐릭터 시트, 사건 구조, 회차 템플릿 파일 생성
-- 📝 **Obsidian 연동**: 볼트 자동 동기화 (현재는 JSON 파일만 생성)
-- 📝 **슬래시 명령어**: /novel-new, /novel-continue, /novel-todo 등 명시적 명령
 - 📝 **자동 단계 전환**: Todo 완료 시 다음 단계 자동 제안
 
 ## 빠른 시작 (Quick Start)
@@ -95,9 +93,24 @@ Director: 👋 안녕하세요, 작가님!
 
 ## LLM 설정
 
-Oh My Novelist는 Anthropic Claude API를 사용하여 AI 에이전트 응답을 생성합니다.
+Oh My Novelist는 provider/auth/runtime을 직접 소유하지 않습니다.
 
-### API 키 설정
+- **Provider 연결과 모델 선택**: OpenCode에서 `/connect`, `/models`, provider 설정으로 관리
+- **Novelist 전용 정책 설정**: repo root `oh-my-novelist.jsonc`
+- **호환성 경로**: 새 정책 파일이 없을 때는 기존 `ANTHROPIC_API_KEY` 기반 동작을 유지
+
+### OpenCode에서 provider 연결
+
+먼저 OpenCode에서 사용할 provider를 연결하세요.
+
+```text
+/connect
+/models
+```
+
+Provider API 키, base URL, custom/local model 설정은 OpenCode 쪽에서 관리합니다.
+
+### Anthropic 호환성 경로
 
 1. `.env.example` 파일을 `.env`로 복사:
    ```bash
@@ -111,22 +124,59 @@ Oh My Novelist는 Anthropic Claude API를 사용하여 AI 에이전트 응답을
    ANTHROPIC_API_KEY=your_api_key_here
    ```
 
-### 오프라인 모드 (API 키 없이 사용)
+이 경로는 **기존 Anthropic-first 기본 동작을 유지하기 위한 호환성 경로**입니다.
+
+### novelist 정책 설정 (`oh-my-novelist.jsonc`)
+
+플러그인 쪽에서는 provider/runtime 정보를 넣지 않고, novelist 전용 정책만 설정합니다.
+
+```jsonc
+{
+  "version": "1.0",
+  "global": {
+    "defaultModel": "anthropic/claude-3-5-sonnet-20241022",
+    "defaultFamily": "claude"
+  },
+  "categories": {
+    "editing": {
+      "defaultModel": "openai/gpt-4o-mini",
+      "defaultFamily": "gpt"
+    }
+  },
+  "agents": {
+    "editor": {
+      "preferredFamily": "gpt"
+    }
+  }
+}
+```
+
+허용되는 것은 다음뿐입니다.
+
+- global/category/agent 정책
+- explicit model override
+- model family (`claude`, `gpt`) 라우팅
+
+넣으면 안 되는 값:
+
+- API key / credentials / auth
+- baseURL / endpoint / transport / retries
+- provider registry 설정
+
+### 오프라인 모드 (provider 미연결 또는 API 키 없이 사용)
 
 API 키가 없어도 플러그인의 기본 기능은 사용할 수 있습니다:
 - 프로젝트 및 Todo 관리
 - Director 라우팅 및 상태 확인
 - 템플릿 및 파일 구조 작업
 
-AI 에이전트 응답 기능은 API 키 설정 후 사용 가능합니다.
+AI 에이전트 응답 기능은 OpenCode provider 연결 또는 Anthropic 호환성 경로 설정 후 사용 가능합니다.
 
 ## 현재 제한 사항
 
 1. **수동 상태 관리**: Todo 상태 업데이트는 수동으로 수행해야 함
 2. **템플릿 미지원**: 템플릿 생성 및 적용 기능 미구현
-3. **Obsidian 제한**: JSON 파일만 생성되며, 실시간 양방향 동기화 없음
-4. **슬래시 명령어 없음**: / 접두사 명령어는 구현되지 않음 (일반 대화 사용)
-5. **자동 단계 전환 제한**: Todo 완료 시 단계 추론은 되지만 자동 진행은 없음
+3. **자동 단계 전환 제한**: Todo 완료 시 단계 추론은 되지만 자동 진행은 없음
 
 ## 설치 방법
 
