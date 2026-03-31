@@ -1,7 +1,11 @@
 # Guided Install and Config for oh-my-novelist
 
 ## TL;DR
-> **Summary**: Add a dedicated guided setup command that interviews the user, checks provider/model readiness, safely generates `llm.config.json`, runs doctor-style verification, and explains the resulting setup. This track is separate from, and depends on, the multi-provider runtime/config foundation.
+> **Status**: 🔄 **REPLACED/STALE** — This plan assumed a legacy config target (`llm.config.json`) that no longer matches the implemented architecture. The canonical config is now `oh-my-novelist.jsonc`. Do not execute this plan as-written.
+>
+> **Replaced by**: `.sisyphus/plans/retire-rollout-and-implement-guided-setup.md`
+>
+> **Historical Summary**: Add a dedicated guided setup command that interviews the user, checks provider/model readiness, safely generates `llm.config.json`, runs doctor-style verification, and explains the resulting setup. This track is separate from, and depends on, the multi-provider runtime/config foundation.
 > **Deliverables**:
 > - Dedicated setup command
 > - Guided interview/state machine

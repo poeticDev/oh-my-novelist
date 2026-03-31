@@ -1,7 +1,11 @@
 # LLM Integration Rollout for oh-my-novelist
 
 ## TL;DR
-> **Summary**: Add an Anthropic-first LLM runtime to the existing plugin without forking oh-my-openagent, preserving current routing semantics while introducing a shared prompt pipeline, plugin-scoped context service, and resilient fallback behavior.
+> **Status**: ⛔ **SUPERCEDED** — This plan represents the original Anthropic-first LLM rollout. The implementation has landed and the current architecture is now governed by the OpenCode-native model policy plan. Do not re-execute.
+>
+> **Superseded by**: `.sisyphus/plans/multi-provider-model-config.md` (OpenCode-native architecture)
+>
+> **Historical Summary**: Add an Anthropic-first LLM runtime to the existing plugin without forking oh-my-openagent, preserving current routing semantics while introducing a shared prompt pipeline, plugin-scoped context service, and resilient fallback behavior.
 > **Deliverables**:
 > - Shared LLM core under `src/llm/`
 > - Prompt loading/building pipeline under `src/prompts/`
