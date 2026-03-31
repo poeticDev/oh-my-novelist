@@ -33,6 +33,10 @@ export class DirectorAgent {
       return this.getProjectSummary(project, projectState, todoManager);
     }
 
+    if (this.isSetupConfigQuery(lowerContent)) {
+      return this.getSetupConfigHint();
+    }
+
     const agentKey = this.selectSpecialistAgent(content);
     if (agentKey && agents[agentKey]) {
       const response = await agents[agentKey].handle(content, project, context);
@@ -40,6 +44,37 @@ export class DirectorAgent {
     }
 
     return this.getDefaultResponse(project, projectState, todoManager);
+  }
+
+  private isSetupConfigQuery(lowerContent: string): boolean {
+    const setupKeywords = [
+      "setup", "config", "설정", "구성", "구성", "환경설정",
+      "initialize", "초기화", "initializ", "설정", "정책",
+      "oh-my-novelist", "ohmynovelist", "policy"
+    ];
+    return setupKeywords.some(keyword => lowerContent.includes(keyword));
+  }
+
+  private getSetupConfigHint(): string {
+    return `🔧 **설정/구성 도구**
+
+\`novelist_setup\` 도구를 사용하여 프로젝트 설정을 관리할 수 있습니다.
+
+**사용 가능한 액션:**
+- \`inspect\` - 현재 설정 상태 확인
+- \`preview\` - 변경 사항 미리보기
+- \`apply\` - 설정 적용
+
+**예시:**
+\`\`\`
+novelist_setup(action: "inspect")
+\`\`\`
+\`\`\`
+novelist_setup(action: "preview")
+\`\`\`
+\`\`\`
+novelist_setup(action: "apply")
+\`\`\``;
   }
 
   private selectSpecialistAgent(content: string): string | null {

@@ -15,6 +15,7 @@ import { EditorAgent } from "./agents/editor.js";
 import type { AgentContext, BaseAgent } from "./agents/base.js";
 
 import { TodoManagerTool } from "./tools/todo-manager.js";
+import { SetupManagerTool } from "./tools/setup-manager.js";
 import { ContextManager } from "./context/manager.js";
 import { createLLMClient } from "./llm/factory.js";
 import { loadPluginPolicyConfig } from "./config/policy.js";
@@ -56,6 +57,7 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
   };
   
   const todoManager = new TodoManagerTool(directory);
+  const setupManager = new SetupManagerTool(directory);
   const { config: policyConfig } = loadPluginPolicyConfig(directory);
   
   const contextManager = new ContextManager({ baseDir: directory });
@@ -184,6 +186,76 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
                 success: false,
                 error: `Unknown action: ${args.action}`,
               };
+          }
+        },
+      },
+      novelist_setup: {
+        description: "Setup and configure the novelist project - inspect current state, preview changes, or apply configuration",
+        parameters: {
+          type: "object",
+          properties: {
+            action: {
+              type: "string",
+              enum: ["inspect", "preview", "apply"],
+              description: "Action to perform: inspect current state, preview changes, or apply configuration",
+            },
+            config: {
+              type: "object",
+              description: "Configuration object (required for preview and apply actions)",
+              properties: {
+                projectName: {
+                  type: "string",
+                  description: "Name of the project",
+                },
+                template: {
+                  type: "string",
+                  description: "Template to use for project setup",
+                },
+                options: {
+                  type: "object",
+                  description: "Additional setup options",
+                },
+              },
+            },
+            dryRun: {
+              type: "boolean",
+              description: "If true, only simulates changes without applying them (for apply action)",
+            },
+          },
+          required: ["action"],
+        },
+        execute: async (args: {
+          action: string;
+          config?: {
+            projectName?: string;
+            template?: string;
+            options?: Record<string, unknown>;
+          };
+          dryRun?: boolean;
+        }) => {
+          const validActions = ["inspect", "preview", "apply"];
+          if (!args.action || !validActions.includes(args.action)) {
+            return {
+              success: false,
+              error: args.action ? `Invalid action: ${args.action}. Must be one of: ${validActions.join(", ")}` : "Missing required parameter: action",
+            };
+          }
+
+          if (args.action !== "inspect" && !args.config) {
+            return {
+              success: false,
+              error: `Missing required parameter: config (required for ${args.action} action)`,
+            };
+          }
+
+          try {
+            const result = setupManager.execute({ action: args.action as "inspect" | "preview" | "apply" });
+            return result;
+          } catch (error) {
+            return {
+              success: false,
+              error: error instanceof Error ? error.message : "Unknown error occurred",
+            };
           }
         },
       },
