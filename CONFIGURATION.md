@@ -121,7 +121,6 @@ repo root에 `oh-my-novelist.jsonc`를 두고 다음처럼 novelist 전용 정�
 
 ```
 ~/.config/opencode/plugins/oh-my-novelist/
-├── config.yaml              # User configuration
 ├── templates/               # Installed templates
 │   ├── default/
 │   ├── romance/
@@ -130,14 +129,16 @@ repo root에 `oh-my-novelist.jsonc`를 두고 다음처럼 novelist 전용 정�
 └── cache/                   # Runtime cache
 ```
 
+**Note**: Plugin-level configuration is managed through OpenCode. Project-specific model policy is configured via `oh-my-novelist.jsonc` in each project root.
+
 ### Project Structure
 
 Each novel project follows this structure:
 
 ```
 my-novel/
+├── oh-my-novelist.jsonc     # Novelist policy configuration (canonical)
 ├── .novel/                  # Project metadata
-│   ├── config.yaml          # Project-specific settings
 │   ├── history.json         # Session history
 │   └── agents.json          # Agent conversation logs
 ├── concept/                 # 기획 문서

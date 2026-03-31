@@ -221,6 +221,10 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
               type: "boolean",
               description: "If true, only simulates changes without applying them (for apply action)",
             },
+            overwrite: {
+              type: "boolean",
+              description: "If true, allows overwriting existing oh-my-novelist.jsonc (for apply action)",
+            },
           },
           required: ["action"],
         },
@@ -232,6 +236,7 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
             options?: Record<string, unknown>;
           };
           dryRun?: boolean;
+          overwrite?: boolean;
         }) => {
           const validActions = ["inspect", "preview", "apply"];
           if (!args.action || !validActions.includes(args.action)) {
@@ -249,7 +254,12 @@ const ohMyNovelist: Plugin = async (input: PluginInput): Promise<Hooks> => {
           }
 
           try {
-            const result = setupManager.execute({ action: args.action as "inspect" | "preview" | "apply" });
+            const result = setupManager.execute({
+              action: args.action as "inspect" | "preview" | "apply",
+              config: args.config as Partial<import("./config/policy.js").PluginPolicyConfig> | undefined,
+              dryRun: args.dryRun,
+              overwrite: args.overwrite,
+            });
             return result;
           } catch (error) {
             return {
