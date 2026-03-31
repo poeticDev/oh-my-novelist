@@ -99,16 +99,38 @@ Oh My Novelist는 provider/auth/runtime을 직접 소유하지 않습니다.
 - **Novelist 전용 정책 설정**: repo root `oh-my-novelist.jsonc`
 - **호환성 경로**: 새 정책 파일이 없을 때는 기존 `ANTHROPIC_API_KEY` 기반 동작을 유지
 
+### Guided Setup으로 설정하기 (권장)
+
+`novelist_setup` 도구를 사용하여 안전하게 설정하세요.
+
+```bash
+# 1. 현재 상태 확인
+novelist_setup(action: "inspect")
+
+# 2. 설정 미리보기 (파일 생성 없이)
+novelist_setup(action: "preview")
+
+# 3. 설정 적용
+novelist_setup(action: "apply")
+```
+
+**주요 기능**:
+- `inspect`: 현재 설정 상태와 유효성 확인
+- `preview`: 생성될 설정 내용 미리보기 (덮어쓰기 영향 포함)
+- `apply`: 설정 파일 생성/업데이트 (백업 자동 생성)
+
+기존 설정 파일이 있으면 백업(`oh-my-novelist.jsonc.bak.YYYYMMDD-HHMMSS`)이 자동으로 생성됩니다.
+
 ### OpenCode에서 provider 연결
 
-먼저 OpenCode에서 사용할 provider를 연결하세요.
+OpenCode에서 provider 연결 및 모델 선택을 먼저 수행하세요.
 
 ```text
 /connect
 /models
 ```
 
-Provider API 키, base URL, custom/local model 설정은 OpenCode 쪽에서 관리합니다.
+Provider API 키, base URL, custom/local model 등의 설정은 OpenCode 설정에서 관리하며, 플러그인은 이 정보에 접근하거나 저장하지 않습니다.
 
 ### Anthropic 호환성 경로
 

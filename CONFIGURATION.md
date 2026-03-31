@@ -35,7 +35,38 @@ Oh My Novelist는 provider runtime을 직접 소유하지 않습니다.
 - **Provider 연결 / 인증 / 모델 카탈로그**: OpenCode가 소유
 - **Novelist 전용 모델 정책**: `oh-my-novelist.jsonc`가 소유
 
-### 1. OpenCode에서 provider 연결
+### 1. Guided Setup으로 설정하기 (권장)
+
+`novelist_setup` 도구를 사용하여 대화형으로 설정합니다.
+
+#### 사용 가능한 작업
+
+| 작업 | 설명 |
+|------|------|
+| `inspect` | 현재 설정 상태 확인 (파일 존재 여부, 유효성, 경고) |
+| `preview` | 적용될 설정 내용 미리보기 (덮어쓰기 여부 포함) |
+| `apply` | 설정 파일 생성/업데이트 (자동 백업) |
+
+#### 기본 사용법
+
+```bash
+# 상태 확인
+novelist_setup(action: "inspect")
+
+# 미리보기
+novelist_setup(action: "preview")
+
+# 적용 (기존 파일 있으면 백업 후 덮어쓰기)
+novelist_setup(action: "apply", overwrite: true)
+```
+
+#### 백업 및 안전성
+
+- 기존 `oh-my-novelist.jsonc`가 있으면 자동으로 백업: `oh-my-novelist.jsonc.bak.YYYYMMDD-HHMMSS`
+- `preview` 작업은 파일을 변경하지 않고 내용만 확인
+- `apply`는 명시적 `overwrite: true`가 필요 (기존 파일 있을 때)
+
+### 2. OpenCode에서 provider 연결
 
 ```text
 /connect
@@ -44,7 +75,7 @@ Oh My Novelist는 provider runtime을 직접 소유하지 않습니다.
 
 provider API 키, custom endpoint, local model, transport option은 OpenCode 설정에서 관리합니다.
 
-### 2. novelist 정책 파일 설정
+### 3. novelist 정책 파일 설정
 
 repo root에 `oh-my-novelist.jsonc`를 두고 다음처럼 novelist 전용 정책만 설정합니다.
 
