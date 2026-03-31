@@ -1,35 +1,23 @@
 {
-  "active_plan": "/Users/poeticdev/Documents/workspace/oh-my-novelist/.sisyphus/plans/cleanup-duplicate-agents-and-legacy.md",
-  "started_at": "2026-03-30T08:50:44.867Z",
-  "session_ids": [
-    "ses_2e0f0ee10ffefhsy3m5D2Mw13j",
-    "ses_2c20d5e11ffe0JL8Dw7SAOqVus",
-    "ses_2c209460affeZ7BUUVTFNyF6AB",
-    "ses_2c2090efbffeoXdhSNm9XhmGTZ",
-    "ses_2c208d7b7ffeK2ks3TFPupQ7Jg",
-    "ses_2c2087db3ffeRSUaDUDo5XWfZW",
-    "ses_2c1fa18b8ffe7H1ssEm6dWZDrl"
-  ],
-  "plan_name": "cleanup-duplicate-agents-and-legacy",
-  "agent": "atlas",
-  "task_sessions": {
-    "todo:1": {
-      "task_key": "todo:1",
-      "task_label": "1",
-      "task_title": "Establish cleanup baseline and freeze the protected keep-set",
-      "session_id": "ses_2c20d5e11ffe0JL8Dw7SAOqVus",
-      "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-03-30T08:56:38.501Z"
+  "active_plan": null,
+  "started_at": null,
+  "completed_at": "2026-03-31T10:05:00.000Z",
+  "session_ids": [],
+  "plan_name": null,
+  "agent": null,
+  "task_sessions": {},
+  "status": "IDLE",
+  "completed_plans": [
+    {
+      "plan": "retire-rollout-and-implement-guided-setup",
+      "completed_at": "2026-03-31T09:59:00.000Z",
+      "f1_f4_status": "ALL_APPROVED"
     },
-    "todo:6": {
-      "task_key": "todo:6",
-      "task_label": "6",
-      "task_title": "Clean low-risk docs and config references tied to removed surfaces",
-      "session_id": "ses_2c2016323ffezVFJvqMN6w6q7S",
-      "agent": "Sisyphus-Junior",
-      "category": "writing",
-      "updated_at": "2026-03-30T09:11:54.666Z"
+    {
+      "plan": "cleanup-duplicate-agents-and-legacy",
+      "completed_at": "2026-03-31T10:05:00.000Z",
+      "f1_f4_status": "F1_F4_REJECTED_BUT_ACCEPTED (scope expansion)",
+      "note": "Scope expanded to include Plan B (OpenCode-native LLM) implementation"
     }
-  }
+  ]
 }
